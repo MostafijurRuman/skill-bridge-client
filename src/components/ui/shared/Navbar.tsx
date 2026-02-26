@@ -2,18 +2,17 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, X, GraduationCap, User, LogOut } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, GraduationCap, LogOut } from "lucide-react";
+import { getCookie, deleteCookie } from "cookies-next";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
     NavigationMenu,
-    NavigationMenuContent,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
-    NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
@@ -32,27 +31,62 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Swal from 'sweetalert2';
 
 const publicRoutes = [
     { name: "Home", href: "/" },
     { name: "Browse Tutors", href: "/tutors" },
 ];
 
-// Placeholder for auth state. You would normally get this from your auth provider (e.g. NextAuth)
-const navAuthProps = {
-    isLoggedIn: false, // Toggle this to see logged in state
-    user: {
-        name: "Student User",
-        email: "student@example.com",
-        role: "student", // 'student', 'tutor', 'admin'
-        image: "",
-    },
-};
-
 export function Navbar() {
     const pathname = usePathname();
+    const router = useRouter();
     const [isOpen, setIsOpen] = React.useState(false);
-    const { isLoggedIn, user } = navAuthProps;
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+    const [user, setUser] = React.useState<Record<string, string> | null>(null);
+
+    React.useEffect(() => {
+        const checkAuth = () => {
+            const tokenCookie = getCookie("token");
+            const userCookie = getCookie("user");
+
+            if (tokenCookie && userCookie) {
+                setIsLoggedIn(true);
+                try {
+                    setUser(JSON.parse(userCookie as string));
+                } catch (e) {
+                    console.error("Failed to parse user cookie", e);
+                }
+            } else {
+                setIsLoggedIn(false);
+                setUser(null);
+            }
+        };
+
+        checkAuth();
+
+        // Listen for custom auth events
+        window.addEventListener("auth-change", checkAuth);
+
+        return () => {
+            window.removeEventListener("auth-change", checkAuth);
+        };
+    }, [pathname]); // Also re-check on navigation
+
+    const handleLogout = () => {
+        deleteCookie("token");
+        deleteCookie("user");
+        setIsLoggedIn(false);
+        setUser(null);
+        Swal.fire({
+            icon: 'success',
+            title: 'Logged Out',
+            text: 'You have successfully logged out.',
+            timer: 2000,
+            showConfirmButton: false,
+        });
+        router.push("/login");
+    };
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-[#E2E8F0] bg-[#FFFFFF]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FFFFFF]/60 font-['Inter',_sans-serif]">
@@ -95,7 +129,7 @@ export function Navbar() {
                 {/* Actions (Login/User Menu & Mobile Toggle) */}
                 <div className="flex items-center justify-end space-x-4">
                     <nav className="flex items-center space-x-2">
-                        {isLoggedIn ? (
+                        {isLoggedIn && user ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button
@@ -103,13 +137,11 @@ export function Navbar() {
                                         className="relative h-9 w-9 rounded-full border border-[#E2E8F0] hover:bg-[#F8FAFC]"
                                     >
                                         <Avatar className="h-8 w-8">
-                                            <AvatarImage src={user.image} alt={user.name} />
+                                            <AvatarImage src={user?.image || ""} alt={user?.name || "User"} />
                                             <AvatarFallback className="bg-[#E2E8F0] text-[#0F172A] font-['Poppins',_sans-serif] font-medium">
-                                                {user.name
-                                                    .split(" ")
-                                                    .map((n) => n[0])
-                                                    .join("")
-                                                    .toUpperCase()}
+                                                {user?.name
+                                                    ? user.name.split(" ")[0][0].toUpperCase()
+                                                    : "U"}
                                             </AvatarFallback>
                                         </Avatar>
                                     </Button>
@@ -129,9 +161,9 @@ export function Navbar() {
                                     <DropdownMenuItem asChild className="hover:bg-[#F8FAFC] focus:bg-[#F8FAFC] text-[#0F172A] cursor-pointer focus:text-[#2563EB]">
                                         <Link
                                             href={
-                                                user.role === "admin"
+                                                user.role === "ADMIN"
                                                     ? "/admin"
-                                                    : user.role === "tutor"
+                                                    : user.role === "TUTOR"
                                                         ? "/tutor/dashboard"
                                                         : "/dashboard"
                                             }
@@ -142,16 +174,16 @@ export function Navbar() {
                                     <DropdownMenuItem asChild className="hover:bg-[#F8FAFC] focus:bg-[#F8FAFC] text-[#0F172A] cursor-pointer focus:text-[#2563EB]">
                                         <Link
                                             href={
-                                                user.role === "tutor"
+                                                user.role === "TUTOR"
                                                     ? "/tutor/profile"
                                                     : "/dashboard/profile"
                                             }
                                         >
-                                            Profile
+                                            Edit Profile
                                         </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator className="bg-[#E2E8F0]" />
-                                    <DropdownMenuItem className="cursor-pointer text-[#EF4444] hover:bg-[#F8FAFC] focus:bg-[#F8FAFC] focus:text-[#EF4444]">
+                                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-[#EF4444] hover:bg-[#F8FAFC] focus:bg-[#F8FAFC] focus:text-[#EF4444]">
                                         <LogOut className="mr-2 h-4 w-4" />
                                         <span>Log out</span>
                                     </DropdownMenuItem>
