@@ -14,7 +14,7 @@ export const loginUser = async (credentials: Record<string, string>) => {
         let errorData;
         try {
             errorData = await response.json();
-        } catch (e) {
+        } catch {
             throw { response: { data: { message: `Login failed with status: ${response.status}` } } };
         }
         throw { response: { data: errorData } };

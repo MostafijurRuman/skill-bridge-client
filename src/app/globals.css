@@ -45,7 +45,7 @@
   --color-warning: #F59E0B;
   --color-error: #EF4444;
   --color-info: #0EA5E9;
-  
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

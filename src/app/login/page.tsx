@@ -82,7 +82,7 @@ export default function LoginPage() {
       }
     } catch (error: unknown) {
       console.error("Login Error:", error);
-      const err = error as any;
+      const err = error as { response?: { data?: { message?: string } } };
       Swal.fire({
         icon: 'error',
         title: 'Login Failed',
