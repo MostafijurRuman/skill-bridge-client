@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, Mail, Lock, ArrowRight, GraduationCap } from "lucide-react";
+import { Loader2, Mail, Lock, ArrowRight, GraduationCap, Eye, EyeOff } from "lucide-react";
 import { setCookie } from "cookies-next";
 
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,7 @@ const formSchema = z.object({
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // 2. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -203,11 +204,18 @@ export default function LoginPage() {
                             <Lock className="h-5 w-5 text-[#475569]/50" />
                           </div>
                           <Input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
-                            className="pl-10 h-12 bg-[#F8FAFC] border-[#E2E8F0] focus-visible:ring-[#2563EB] rounded-xl text-base"
+                            className="pl-10 pr-12 h-12 bg-[#F8FAFC] border-[#E2E8F0] focus-visible:ring-[#2563EB] rounded-xl text-base"
                             {...field}
                           />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#475569] hover:text-[#0F172A] transition-colors"
+                          >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          </button>
                         </div>
                       </FormControl>
                       <FormMessage className="text-[#EF4444]" />
