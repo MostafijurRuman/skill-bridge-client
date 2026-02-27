@@ -32,3 +32,16 @@ export const getAllTutors = async (filters?: TutorFilters) => {
         return [];
     }
 }
+
+export const getTutorById = async (id: string) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tutors/${id}`, {
+            cache: 'no-store'
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching tutor by id", error);
+        return null;
+    }
+}

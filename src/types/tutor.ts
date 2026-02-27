@@ -21,4 +21,19 @@ export interface TutorType {
         id: string;
         name: string;
     }[];
+    availability?: {
+        id: string;
+        tutorId: string;
+        day: string;
+        startTime: string;
+        endTime: string;
+    }[];
+    reviews?: {
+        id: string;
+        tutorId: string;
+        studentId: string;
+        rating: number;
+        comment: string;
+        createdAt: string;
+    }[];
 }
