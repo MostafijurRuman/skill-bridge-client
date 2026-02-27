@@ -126,9 +126,11 @@ export default function Home() {
       try {
         const response = await getAllTutors();
         if (response && response.data && Array.isArray(response.data) && response.data.length > 0) {
-          setTutors(response.data.slice(0, 4));
+          const sortedTutors = [...response.data].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+          setTutors(sortedTutors.slice(0, 4));
         } else if (response && Array.isArray(response) && response.length > 0) {
-          setTutors(response.slice(0, 4));
+          const sortedTutors = [...response].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+          setTutors(sortedTutors.slice(0, 4));
         } else {
           setTutors(fallbackTutors);
         }
@@ -145,14 +147,18 @@ export default function Home() {
       if (cats && cats.length > 0) {
         setDbCategories(cats);
       } else {
-        // Fallback temporary categories mapping if backend fails
+        // Fallback matched exactly to backend categories mapping if backend network fails
         setDbCategories([
-          { id: "1", name: "Mathematics" },
-          { id: "2", name: "Programming" },
-          { id: "3", name: "Languages" },
-          { id: "4", name: "Sciences" },
-          { id: "5", name: "Business" },
-          { id: "6", name: "Humanities" },
+          { id: "cddb9e42-2b16-445b-8184-1436710da1f0", name: "Mathematics" },
+          { id: "a36cc387-5815-4bc4-ae52-817c82d22dc8", name: "Physics" },
+          { id: "c2ddcbcd-c17f-4c0e-b10d-18517bddcb04", name: "Chemistry" },
+          { id: "b4121a09-a75c-459f-9057-ef9628542ae4", name: "Biology" },
+          { id: "89c43341-e3c2-4fb5-9c51-16b235c6fe62", name: "Computer Science" },
+          { id: "21f71e4a-cea8-4ee4-97ce-d10814e03eb7", name: "English Literature" },
+          { id: "77e421fa-5c47-4b8b-a776-a974ccf5fb81", name: "History" },
+          { id: "1017ccca-25a7-412c-9d41-aed440bff60d", name: "Geography" },
+          { id: "979db2f1-71f9-47b8-a749-5f4e6cb7c057", name: "Music Theory" },
+          { id: "24606d31-ebdb-4d5e-a628-bcb793296091", name: "Visual Arts" }
         ]);
       }
     };
@@ -224,6 +230,7 @@ export default function Home() {
           </div>
 
           <motion.div
+            key={dbCategories.length}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
