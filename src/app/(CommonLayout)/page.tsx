@@ -33,20 +33,66 @@ const staggerContainer = {
   }
 };
 
-const featuredTutors = [
-  { id: 1, name: "Sarah Johnson", subject: "Advanced Calculus", rating: 4.9, reviews: 124, price: "$40/hr", image: "https://i.pravatar.cc/150?u=sarah" },
-  { id: 2, name: "David Chen", subject: "Full Stack Dev", rating: 5.0, reviews: 89, price: "$55/hr", image: "https://i.pravatar.cc/150?u=david" },
-  { id: 3, name: "Maria Garcia", subject: "Spanish Literature", rating: 4.8, reviews: 204, price: "$30/hr", image: "https://i.pravatar.cc/150?u=maria" },
-  { id: 4, name: "James Wilson", subject: "Quantum Physics", rating: 4.9, reviews: 156, price: "$45/hr", image: "https://i.pravatar.cc/150?u=james" },
+import { useEffect, useState } from "react";
+import { getAllTutors } from "@/services/tutors";
+import { getAllCategories, Category } from "@/services/categories";
+import TutorCard from "@/components/TutorCard";
+import { TutorType } from "@/types/tutor";
+
+const fallbackTutors: TutorType[] = [
+  {
+    id: "1",
+    userId: "u1",
+    bio: "Passionate about making calculus intuitive and fun.",
+    pricePerHr: 40,
+    rating: 4.9,
+    user: {
+      id: "u1", name: "Sarah Johnson", email: "sarah@example.com", password: null, role: "TUTOR", isBanned: false, bannedAt: null, emailVerified: true, image: "https://i.pravatar.cc/150?u=sarah", createdAt: "", updatedAt: ""
+    },
+    categories: [{ id: "c1", name: "Advanced Calculus" }]
+  },
+  {
+    id: "2",
+    userId: "u2",
+    bio: "Expert in modern web development frameworks and tools.",
+    pricePerHr: 55,
+    rating: 5.0,
+    user: {
+      id: "u2", name: "David Chen", email: "david@example.com", password: null, role: "TUTOR", isBanned: false, bannedAt: null, emailVerified: true, image: "https://i.pravatar.cc/150?u=david", createdAt: "", updatedAt: ""
+    },
+    categories: [{ id: "c2", name: "Full Stack Dev" }]
+  },
+  {
+    id: "3",
+    userId: "u3",
+    bio: "Bringing Spanish literature to life through engaging discussions.",
+    pricePerHr: 30,
+    rating: 4.8,
+    user: {
+      id: "u3", name: "Maria Garcia", email: "maria@example.com", password: null, role: "TUTOR", isBanned: false, bannedAt: null, emailVerified: true, image: "https://i.pravatar.cc/150?u=maria", createdAt: "", updatedAt: ""
+    },
+    categories: [{ id: "c3", name: "Spanish Literature" }]
+  },
+  {
+    id: "4",
+    userId: "u4",
+    bio: "Demystifying the quantum realm step by step.",
+    pricePerHr: 45,
+    rating: 4.9,
+    user: {
+      id: "u4", name: "James Wilson", email: "james@example.com", password: null, role: "TUTOR", isBanned: false, bannedAt: null, emailVerified: true, image: null, createdAt: "", updatedAt: ""
+    },
+    categories: [{ id: "c4", name: "Quantum Physics" }]
+  },
 ];
 
-const categories = [
-  { name: "Mathematics", icon: Calculator, color: "bg-primary/10 text-primary", hover: "hover:bg-primary hover:text-white" },
-  { name: "Programming", icon: Code, color: "bg-secondary/10 text-secondary", hover: "hover:bg-secondary hover:text-white" },
-  { name: "Languages", icon: Globe, color: "bg-accent/10 text-accent", hover: "hover:bg-accent hover:text-white" },
-  { name: "Sciences", icon: FlaskConical, color: "bg-info/10 text-info", hover: "hover:bg-info hover:text-white" },
-  { name: "Business", icon: Briefcase, color: "bg-success/10 text-success", hover: "hover:bg-success hover:text-white" },
-  { name: "Humanities", icon: BookOpen, color: "bg-primary-dark/10 text-primary-dark", hover: "hover:bg-primary-dark hover:text-white" },
+const categoryStyles = [
+  { icon: Calculator, color: "bg-primary/10 text-primary", hover: "hover:bg-primary hover:text-white" },
+  { icon: Code, color: "bg-secondary/10 text-secondary", hover: "hover:bg-secondary hover:text-white" },
+  { icon: Globe, color: "bg-accent/10 text-accent", hover: "hover:bg-accent hover:text-white" },
+  { icon: FlaskConical, color: "bg-info/10 text-info", hover: "hover:bg-info hover:text-white" },
+  { icon: Briefcase, color: "bg-success/10 text-success", hover: "hover:bg-success hover:text-white" },
+  { icon: BookOpen, color: "bg-primary-dark/10 text-primary-dark", hover: "hover:bg-primary-dark hover:text-white" },
 ];
 
 const steps = [
@@ -55,7 +101,66 @@ const steps = [
   { title: "Start Learning", desc: "Join your personalized session and master new skills fastest.", icon: TrendingUp },
 ];
 
+import { useRouter } from "next/navigation";
+
 export default function Home() {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Assuming search maps to a category or general term
+      router.push(`/tutors?category=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      router.push(`/tutors`);
+    }
+  };
+
+  const [tutors, setTutors] = useState<TutorType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [dbCategories, setDbCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchTutors = async () => {
+      try {
+        const response = await getAllTutors();
+        if (response && response.data && Array.isArray(response.data) && response.data.length > 0) {
+          setTutors(response.data.slice(0, 4));
+        } else if (response && Array.isArray(response) && response.length > 0) {
+          setTutors(response.slice(0, 4));
+        } else {
+          setTutors(fallbackTutors);
+        }
+      } catch (error) {
+        console.error(error);
+        setTutors(fallbackTutors);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchCats = async () => {
+      const cats = await getAllCategories();
+      if (cats && cats.length > 0) {
+        setDbCategories(cats);
+      } else {
+        // Fallback temporary categories mapping if backend fails
+        setDbCategories([
+          { id: "1", name: "Mathematics" },
+          { id: "2", name: "Programming" },
+          { id: "3", name: "Languages" },
+          { id: "4", name: "Sciences" },
+          { id: "5", name: "Business" },
+          { id: "6", name: "Humanities" },
+        ]);
+      }
+    };
+
+    fetchTutors();
+    fetchCats();
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-hidden">
 
@@ -86,17 +191,19 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={fadeIn} className="w-full max-w-2xl mx-auto pt-4 relative">
-              <div className="flex items-center bg-white rounded-2xl p-2 shadow-lg border border-border/50">
+              <form onSubmit={handleSearch} className="flex items-center bg-white rounded-2xl p-2 shadow-lg border border-border/50">
                 <Search className="w-6 h-6 text-muted-foreground ml-3 mr-2" />
                 <input
                   type="text"
-                  placeholder="What do you want to learn today? (e.g. Next.js, Calculus)"
+                  placeholder="What do you want to learn today? (e.g. Business, Mathematics)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground px-2 h-12 truncate"
                 />
-                <Button size="lg" className="bg-primary hover:bg-primary-dark text-white rounded-xl px-8 h-12 shadow-md transition-all">
+                <Button type="submit" size="lg" className="bg-primary hover:bg-primary-dark text-white rounded-xl px-8 h-12 shadow-md transition-all">
                   Search
                 </Button>
-              </div>
+              </form>
             </motion.div>
 
             <motion.div variants={fadeIn} className="pt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground font-medium">
@@ -123,13 +230,14 @@ export default function Home() {
             variants={staggerContainer}
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"
           >
-            {categories.map((category, index) => {
-              const Icon = category.icon;
+            {dbCategories.slice(0, 6).map((category, index) => {
+              const style = categoryStyles[index % categoryStyles.length];
+              const Icon = style.icon;
               return (
-                <motion.div key={index} variants={fadeIn}>
-                  <Link href={`/tutors?category=${category.name.toLowerCase()}`} className="group block h-full">
+                <motion.div key={category.id} variants={fadeIn}>
+                  <Link href={`/tutors?category=${encodeURIComponent(category.name)}`} className="group block h-full">
                     <div className="flex flex-col items-center justify-center p-6 bg-background rounded-2xl border border-border hover:shadow-xl transition-all duration-300 h-full group-hover:-translate-y-1">
-                      <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 transition-colors duration-300 ${category.color} ${category.hover}`}>
+                      <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 transition-colors duration-300 ${style.color} ${style.hover}`}>
                         <Icon className="w-7 h-7" />
                       </div>
                       <h3 className="font-heading font-semibold text-foreground text-center">{category.name}</h3>
@@ -155,42 +263,25 @@ export default function Home() {
             </Link>
           </div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-          >
-            {featuredTutors.map((tutor) => (
-              <motion.div key={tutor.id} variants={fadeIn} className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-xl transition-all group">
-                <div className="h-24 bg-gradient-to-r from-primary/10 to-secondary/10 relative">
-                  <img
-                    src={tutor.image}
-                    alt={tutor.name}
-                    className="w-20 h-20 rounded-full border-4 border-white absolute -bottom-10 left-6 object-cover bg-white shadow-sm"
-                  />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur text-foreground px-3 py-1 rounded-full text-sm font-bold shadow-sm">
-                    {tutor.price}
-                  </div>
+          {loading ? (
+            <div className="col-span-1 sm:col-span-2 lg:col-span-4 text-center py-12 text-muted-foreground">
+              Loading top tutors...
+            </div>
+          ) : (
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerContainer}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 h-full"
+            >
+              {tutors.map((tutor) => (
+                <div key={tutor.id} className="h-full">
+                  <TutorCard tutor={tutor} />
                 </div>
-                <div className="pt-14 p-6 space-y-4">
-                  <div>
-                    <h3 className="font-heading font-bold text-lg text-foreground">{tutor.name}</h3>
-                    <p className="text-secondary font-medium text-sm">{tutor.subject}</p>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm">
-                    <Star className="w-4 h-4 text-accent fill-accent" />
-                    <span className="font-bold text-foreground">{tutor.rating}</span>
-                    <span className="text-muted-foreground">({tutor.reviews} reviews)</span>
-                  </div>
-                  <Button className="w-full bg-background text-foreground border border-border hover:bg-primary hover:text-white transition-all rounded-xl">
-                    View Profile
-                  </Button>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+              ))}
+            </motion.div>
+          )}
 
           <div className="mt-8 text-center md:hidden">
             <Button variant="outline" className="rounded-xl px-8">

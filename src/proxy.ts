@@ -10,7 +10,7 @@ const roleBasedRoutes = {
 
 const authRoutes = ["/login", "/register"];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Extract user cookie
