@@ -3,9 +3,7 @@
 import {
   BookOpen,
   Calendar,
-  CreditCard,
   LayoutDashboard,
-  Settings,
   User,
   Users,
 } from "lucide-react"
@@ -47,11 +45,6 @@ const navData = {
       url: "/admin/categories",
       icon: BookOpen,
     },
-    {
-      title: "Settings",
-      url: "/admin/settings",
-      icon: Settings,
-    },
   ],
   tutor: [
     {
@@ -61,22 +54,12 @@ const navData = {
       isActive: true,
     },
     {
-      title: "My Sessions",
-      url: "/tutor/sessions",
-      icon: Calendar,
-    },
-    {
       title: "Availability",
       url: "/tutor/availability",
       icon: BookOpen,
     },
     {
-      title: "Earnings",
-      url: "/tutor/earnings",
-      icon: CreditCard,
-    },
-    {
-      title: "Profile Settings",
+      title: "Profile",
       url: "/tutor/profile",
       icon: User,
     },

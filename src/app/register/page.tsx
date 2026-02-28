@@ -67,8 +67,8 @@ function RegisterForm() {
                 router.push("/login");
             }, 2000);
 
-        } catch (err: any) {
-            setError(err.message || "Failed to register. Please try again.");
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : "Failed to register. Please try again.");
         } finally {
             setIsLoading(false);
         }

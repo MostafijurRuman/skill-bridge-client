@@ -34,6 +34,13 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const router = useRouter()
+  const normalizedRole = (user.role || "student").toLowerCase();
+  const profilePath =
+    normalizedRole === "admin"
+      ? "/admin/profile"
+      : normalizedRole === "tutor"
+        ? "/tutor/profile"
+        : "/dashboard/profile";
 
   const handleLogout = () => {
     deleteCookie("token");
@@ -91,7 +98,7 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => router.push(`/${user.role}/profile`)}>
+              <DropdownMenuItem onClick={() => router.push(profilePath)}>
                 <User className="mr-2 h-4 w-4" />
                 Profile
               </DropdownMenuItem>

@@ -53,7 +53,7 @@ export default async function TutorsPage(props: Props) {
               <div className="text-center py-20 bg-white rounded-2xl border border-border shadow-sm">
                 <h2 className="text-2xl font-bold font-heading mb-2">No Tutors Found</h2>
                 <p className="text-muted-foreground max-w-md mx-auto">
-                  We couldn't find any tutors matching your current filters. Try changing or clearing your filters to see more results.
+                  We could not find any tutors matching your current filters. Try changing or clearing your filters to see more results.
                 </p>
               </div>
             )}

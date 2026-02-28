@@ -146,6 +146,11 @@ export default function BookingCard({
     const [comment, setComment] = useState("");
 
     const handleCancel = async () => {
+        if (!defaultBooking.id) {
+            toast.error("Booking ID missing. Unable to cancel.");
+            return;
+        }
+
         setIsCancelling(true);
         try {
             const res = await cancelBooking(defaultBooking.id);

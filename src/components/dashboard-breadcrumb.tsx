@@ -12,24 +12,38 @@ import {
 export function DashboardBreadcrumb() {
     const pathname = usePathname();
 
-    let title = "Student Dashboard";
-    if (pathname.includes("/admin")) {
-        title = "Admin Dashboard";
-    } else if (pathname.includes("/tutor")) {
-        title = "Tutor Dashboard";
-    }
+    const isAdmin = pathname.includes("/admin");
+    const isTutor = pathname.includes("/tutor");
+    const title = isAdmin ? "Admin Dashboard" : isTutor ? "Tutor Dashboard" : "Student Dashboard";
+    const rootPath = isAdmin ? "/admin" : isTutor ? "/tutor/dashboard" : "/dashboard";
+
+    const segments = pathname.split("/").filter(Boolean);
+    const currentSegment = segments[segments.length - 1] || "dashboard";
+
+    const labelMap: Record<string, string> = {
+        dashboard: "Dashboard",
+        availability: "Availability",
+        profile: "Profile",
+        bookings: "Bookings",
+        users: "Users",
+        categories: "Categories",
+        admin: "Dashboard",
+        tutor: "Dashboard",
+    };
+
+    const pageLabel = labelMap[currentSegment] || currentSegment.replace(/-/g, " ");
 
     return (
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">
+                    <BreadcrumbLink href={rootPath}>
                         {title}
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                    <BreadcrumbPage>Overview</BreadcrumbPage>
+                    <BreadcrumbPage className="capitalize">{pageLabel}</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
