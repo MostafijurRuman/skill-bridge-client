@@ -9,14 +9,8 @@ import { toast } from "sonner";
 type JsonRecord = Record<string, unknown>;
 
 type BookingReview = {
-    bookingId?: string;
-    booking?: {
-        id?: string;
-    };
-    studentId?: string;
-    student?: {
-        id?: string;
-    };
+    id?: string;
+    tutorId?: string;
     rating?: number | string;
     comment?: string;
     createdAt?: string;
@@ -46,7 +40,8 @@ type BookingData = {
 };
 
 type ReviewInfo = {
-    bookingId?: string;
+    id?: string;
+    tutorId?: string;
     rating: number;
     comment: string;
     createdAt: string;
@@ -54,9 +49,6 @@ type ReviewInfo = {
 
 const isRecord = (value: unknown): value is JsonRecord =>
     typeof value === "object" && value !== null;
-
-const getReviewBookingId = (review: BookingReview | undefined): string | undefined =>
-    review?.bookingId || review?.booking?.id;
 
 const normalizeReview = (review: unknown): ReviewInfo | null => {
     if (!isRecord(review)) return null;
@@ -71,39 +63,29 @@ const normalizeReview = (review: unknown): ReviewInfo | null => {
     if (!Number.isFinite(rating) || rating < 1 || rating > 5 || !comment) return null;
 
     return {
-        bookingId: typeof review.bookingId === "string" ? review.bookingId : undefined,
+        id: typeof review.id === "string" ? review.id : undefined,
+        tutorId: typeof review.tutorId === "string" ? review.tutorId : undefined,
         rating,
         comment,
         createdAt,
     };
 };
 
-const extractExistingReview = (booking: BookingData, currentStudentId?: string): ReviewInfo | null => {
-    const currentBookingId = booking?.id;
-
+const extractExistingReview = (booking: BookingData): ReviewInfo | null => {
     const directReview = normalizeReview(booking?.review);
-    if (directReview) {
-        if (!currentBookingId || !booking?.review || getReviewBookingId(booking.review) === currentBookingId) {
-            return directReview;
+    if (directReview) return directReview;
+
+    if (Array.isArray(booking?.reviews)) {
+        for (const item of booking.reviews) {
+            const parsed = normalizeReview(item);
+            if (parsed) return parsed;
         }
     }
 
-    if (currentBookingId && Array.isArray(booking?.reviews)) {
-        const matchingReview = booking.reviews.find((item) => getReviewBookingId(item) === currentBookingId);
-        const reviewFromArray = normalizeReview(matchingReview);
-        if (reviewFromArray) return reviewFromArray;
-    }
-
-    if (currentBookingId && Array.isArray(booking?.tutor?.reviews)) {
-        const studentId = booking?.studentId || currentStudentId;
-        if (studentId) {
-            const matched = booking.tutor.reviews.find(
-                (item) =>
-                    getReviewBookingId(item) === currentBookingId &&
-                    (item?.studentId === studentId || item?.student?.id === studentId)
-            );
-            const reviewFromTutor = normalizeReview(matched);
-            if (reviewFromTutor) return reviewFromTutor;
+    if (Array.isArray(booking?.tutor?.reviews)) {
+        for (const item of booking.tutor.reviews) {
+            const parsed = normalizeReview(item);
+            if (parsed) return parsed;
         }
     }
 
@@ -112,7 +94,7 @@ const extractExistingReview = (booking: BookingData, currentStudentId?: string):
 
 const extractCreatedReview = (
     responseData: unknown,
-    fallback: { bookingId?: string; rating: number; comment: string }
+    fallback: { tutorId?: string; rating: number; comment: string }
 ): ReviewInfo => {
     const directReview = normalizeReview(responseData);
     if (directReview) return directReview;
@@ -121,21 +103,25 @@ const extractCreatedReview = (
     if (nestedReview) return nestedReview;
 
     return {
-        bookingId: fallback.bookingId,
+        tutorId: fallback.tutorId,
         rating: fallback.rating,
         comment: fallback.comment,
         createdAt: new Date().toISOString(),
     };
 };
 
+const getTutorIdFromBooking = (booking: BookingData): string => {
+    if (typeof booking.tutorId === "string" && booking.tutorId.trim()) return booking.tutorId.trim();
+    if (typeof booking.tutor?.id === "string" && booking.tutor.id.trim()) return booking.tutor.id.trim();
+    return "";
+};
+
 export default function BookingCard({
     booking: defaultBooking,
-    currentStudentId,
 }: {
     booking: BookingData;
-    currentStudentId?: string;
 }) {
-    const initialReview = extractExistingReview(defaultBooking, currentStudentId);
+    const initialReview = extractExistingReview(defaultBooking);
     const [status, setStatus] = useState(defaultBooking.status || "Pending");
     const [isCancelling, setIsCancelling] = useState(false);
     const [isReviewOpen, setIsReviewOpen] = useState(false);
@@ -144,6 +130,7 @@ export default function BookingCard({
     const [hasReviewed, setHasReviewed] = useState(Boolean(initialReview));
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState("");
+    const tutorId = getTutorIdFromBooking(defaultBooking);
 
     const handleCancel = async () => {
         if (!defaultBooking.id) {
@@ -169,20 +156,27 @@ export default function BookingCard({
 
     const handleReviewSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!defaultBooking.id) {
-            toast.error("Booking ID missing. Unable to submit review.");
+
+        if (!tutorId) {
+            toast.error("Tutor ID missing. Unable to submit review.");
+            return;
+        }
+
+        const trimmedComment = comment.trim();
+        if (!trimmedComment) {
+            toast.error("Please enter a review comment.");
             return;
         }
 
         setIsSubmittingReview(true);
         try {
             const res = await createReview({
-                bookingId: defaultBooking.id,
+                tutorId,
                 rating,
-                comment,
+                comment: trimmedComment,
             });
             if (res.success) {
-                setReview(extractCreatedReview(res.data, { bookingId: defaultBooking.id, rating, comment }));
+                setReview(extractCreatedReview(res.data, { tutorId, rating, comment: trimmedComment }));
                 setHasReviewed(true);
                 setRating(5);
                 setComment("");
