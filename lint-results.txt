@@ -1,0 +1,28 @@
+
+> skill-bridge-client@0.1.0 lint
+> eslint
+
+
+E:\Next-Devs-Practice\skill-bridge-client\src\app\(CommonLayout)\page.tsx
+  8:3  warning  'Star' is defined but never used  @typescript-eslint/no-unused-vars
+
+E:\Next-Devs-Practice\skill-bridge-client\src\app\(CommonLayout)\tutors\[id]\page.tsx
+    4:10  warning  'Button' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   66:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  208:54  warning  'e' is defined but never used                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+
+E:\Next-Devs-Practice\skill-bridge-client\src\app\(CommonLayout)\tutors\page.tsx
+  56:28  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+E:\Next-Devs-Practice\skill-bridge-client\src\app\(DashboardLayout)\dashboard\bookings\page.tsx
+  31:32  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                               react/no-unescaped-entities
+  33:21  error  Do not use an `<a>` element to navigate to `/tutors/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+E:\Next-Devs-Practice\skill-bridge-client\src\app\(DashboardLayout)\dashboard\page.tsx
+  21:53  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+E:\Next-Devs-Practice\skill-bridge-client\src\app\login\page.tsx
+  130:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+Γ£û 9 problems (4 errors, 5 warnings)
+
