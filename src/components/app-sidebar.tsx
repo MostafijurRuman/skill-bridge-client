@@ -45,6 +45,11 @@ const navData = {
       url: "/admin/categories",
       icon: BookOpen,
     },
+    {
+      title: "Profile",
+      url: "/admin/profile",
+      icon: User,
+    },
   ],
   tutor: [
     {

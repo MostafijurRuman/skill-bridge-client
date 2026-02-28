@@ -37,7 +37,7 @@ export function NavUser({
   const normalizedRole = (user.role || "student").toLowerCase();
   const profilePath =
     normalizedRole === "admin"
-      ? "/admin"
+      ? "/admin/profile"
       : normalizedRole === "tutor"
         ? "/tutor/profile"
         : "/dashboard/profile";
@@ -100,7 +100,7 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => router.push(profilePath)}>
                 <User className="mr-2 h-4 w-4" />
-                Profile
+                Edit Profile
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
