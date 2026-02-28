@@ -1,7 +1,7 @@
 import { getTutorById } from "@/services/tutors";
 import { TutorType } from "@/types/tutor";
 import { Star, Clock, MapPin, Calendar, CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { BookingModal } from "@/components/BookingModal";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -102,9 +102,12 @@ export default async function TutorProfilePage({ params }: PageProps) {
 
                         {/* Quick Actions (Desktop only, mobile moves below) */}
                         <div className="hidden md:flex shrink-0 mt-6 md:mt-0">
-                            <Button size="lg" className="w-full bg-primary hover:bg-primary-dark text-white rounded-xl shadow-md px-8 py-6 text-lg font-bold">
-                                Book Session
-                            </Button>
+                            <BookingModal
+                                tutorId={tutor.id}
+                                tutorName={tutor.user?.name || "Tutor"}
+                                pricePerHr={tutor.pricePerHr}
+                                availability={tutor.availability || []}
+                            />
                         </div>
                     </div>
                 </div>
@@ -165,9 +168,12 @@ export default async function TutorProfilePage({ params }: PageProps) {
                     <div className="md:col-span-1 space-y-8">
                         {/* Mobile Booking Action (Visible only on mobile) */}
                         <div className="md:hidden bg-white rounded-3xl border border-border shadow-sm p-6 text-center">
-                            <Button size="lg" className="w-full bg-primary hover:bg-primary-dark text-white rounded-xl shadow-md py-6 text-lg font-bold">
-                                Book Session
-                            </Button>
+                            <BookingModal
+                                tutorId={tutor.id}
+                                tutorName={tutor.user?.name || "Tutor"}
+                                pricePerHr={tutor.pricePerHr}
+                                availability={tutor.availability || []}
+                            />
                         </div>
 
                         {/* Availability / Overview */}
