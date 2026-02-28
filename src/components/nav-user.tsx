@@ -37,7 +37,7 @@ export function NavUser({
   const normalizedRole = (user.role || "student").toLowerCase();
   const profilePath =
     normalizedRole === "admin"
-      ? "/admin/profile"
+      ? "/admin"
       : normalizedRole === "tutor"
         ? "/tutor/profile"
         : "/dashboard/profile";

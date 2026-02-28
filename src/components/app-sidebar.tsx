@@ -31,12 +31,12 @@ const navData = {
       isActive: true,
     },
     {
-      title: "Users Management",
+      title: "Users",
       url: "/admin/users",
       icon: Users,
     },
     {
-      title: "All Bookings",
+      title: "Bookings",
       url: "/admin/bookings",
       icon: Calendar,
     },
