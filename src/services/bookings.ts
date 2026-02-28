@@ -260,3 +260,77 @@ export const cancelBooking = async (
   }
 };
 
+export const completeBooking = async (
+  bookingId: string
+): Promise<BookingActionResult> => {
+  try {
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) {
+      return {
+        success: false,
+        message:
+          "Server config error: BACKEND_URL or NEXT_PUBLIC_BASE_URL is missing.",
+      };
+    }
+
+    const cookieStore = await cookies();
+
+    const token =
+      cookieStore.get("token")?.value?.trim() ||
+      cookieStore.get("better-auth.session_token")?.value?.trim() ||
+      cookieStore.get("__Secure-better-auth.session_token")?.value?.trim();
+
+    const headers = new Headers({
+      "Content-Type": "application/json",
+    });
+
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    } else {
+      const secureSession = cookieStore.get("__Secure-better-auth.session_token")?.value;
+      const normalSession = cookieStore.get("better-auth.session_token")?.value;
+
+      if (secureSession) {
+        headers.set("Cookie", `__Secure-better-auth.session_token=${secureSession}`);
+      } else if (normalSession) {
+        headers.set("Cookie", `better-auth.session_token=${normalSession}`);
+      } else {
+        return {
+          success: false,
+          message: "Unauthorized. Please log in first.",
+        };
+      }
+    }
+
+    const response = await fetch(`${baseUrl}/api/bookings/${bookingId}/complete`, {
+      method: "PATCH",
+      headers,
+      cache: "no-store",
+    });
+
+    const raw = await response.text();
+    const data = parseResponseBody(raw);
+
+    if (!response.ok) {
+      return {
+        success: false,
+        status: response.status,
+        message:
+          data?.message || `Failed to complete booking (status ${response.status}).`,
+        data,
+      };
+    }
+
+    return {
+      success: true,
+      status: response.status,
+      data,
+    };
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+    return {
+      success: false,
+      message: error?.message || "Unexpected server error.",
+    };
+  }
+};
+

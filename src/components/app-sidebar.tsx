@@ -3,6 +3,7 @@
 import {
   BookOpen,
   Calendar,
+  CalendarCheck2,
   LayoutDashboard,
   User,
   Users,
@@ -57,6 +58,11 @@ const navData = {
       url: "/tutor/dashboard",
       icon: LayoutDashboard,
       isActive: true,
+    },
+    {
+      title: "Sessions",
+      url: "/tutor/sessions",
+      icon: CalendarCheck2,
     },
     {
       title: "Availability",

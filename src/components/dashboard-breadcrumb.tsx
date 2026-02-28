@@ -25,6 +25,7 @@ export function DashboardBreadcrumb() {
         availability: "Availability",
         profile: "Profile",
         bookings: "Bookings",
+        sessions: "Sessions",
         users: "Users",
         categories: "Categories",
         admin: "Dashboard",
