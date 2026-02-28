@@ -94,19 +94,9 @@ const navData = {
       icon: Calendar,
     },
     {
-      title: "Saved Tutors",
-      url: "/dashboard/saved",
-      icon: Users,
-    },
-    {
       title: "Profile",
       url: "/dashboard/profile",
       icon: User,
-    },
-    {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: Settings,
     },
   ],
 }
