@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar, Clock, User, Video, GraduationCap, Loader2, Star, CheckCircle2 } from "lucide-react";
+import { Calendar, Clock, User, Video, GraduationCap, Loader2, Star, CheckCircle2, CreditCard } from "lucide-react";
 import { cancelBooking } from "@/services/bookings";
 import { createReview } from "@/services/reviews";
 import { toast } from "sonner";
@@ -19,6 +19,8 @@ type BookingReview = {
 type BookingData = {
     id?: string;
     status?: string;
+    paymentStatus?: string;
+    amount?: number;
     tutorId?: string;
     sessionDate?: string;
     meetingLink?: string;
@@ -203,6 +205,15 @@ export default function BookingCard({
     if (normalizedStatus === "cancelled") statusColor = "bg-red-100 text-red-800"
     if (normalizedStatus === "completed") statusColor = "bg-blue-100 text-blue-800"
 
+    const normalizedPaymentStatus = String(defaultBooking.paymentStatus || "PENDING").toLowerCase();
+    let paymentColor = "bg-amber-100 text-amber-800";
+    if (normalizedPaymentStatus === "paid") paymentColor = "bg-emerald-100 text-emerald-800";
+    if (normalizedPaymentStatus === "failed") paymentColor = "bg-red-100 text-red-800";
+    if (normalizedPaymentStatus === "refunded") paymentColor = "bg-slate-100 text-slate-700";
+    const amountText = typeof defaultBooking.amount === "number"
+        ? `$${(defaultBooking.amount / 100).toFixed(2)}`
+        : null;
+
     const tutorName = defaultBooking.tutor?.user?.name || "Tutor"
     const tutorSubject = defaultBooking.tutor?.categories?.[0]?.name || "General Session"
 
@@ -235,6 +246,13 @@ export default function BookingCard({
                 </div>
 
                 <div className="space-y-3 flex-1 mb-6">
+                    <div className={`flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-sm font-medium ${paymentColor}`}>
+                        <span className="flex items-center gap-2 capitalize">
+                            <CreditCard className="w-4 h-4" />
+                            {normalizedPaymentStatus}
+                        </span>
+                        {amountText && <span>{amountText}</span>}
+                    </div>
                     <div className="flex flex-col gap-1.5 p-3 bg-slate-50 border border-slate-100 rounded-xl">
                         <div className="flex items-center gap-2 text-sm text-slate-700">
                             <Calendar className="w-4 h-4 text-primary" />

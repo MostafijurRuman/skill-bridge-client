@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { X, Calendar as CalendarIcon, Clock, Loader2 } from "lucide-react";
+import { X, Calendar as CalendarIcon, Clock, Loader2, CreditCard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { createBooking } from "@/services/bookings";
@@ -10,6 +10,9 @@ import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { format, addDays, startOfToday, isSameDay } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Elements } from "@stripe/react-stripe-js";
+import { PaymentForm } from "@/components/PaymentForm";
+import { stripePromise, stripePublishableKey } from "@/lib/stripe";
 
 interface Availability {
     id: string;
@@ -30,6 +33,8 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [clientSecret, setClientSecret] = useState("");
+    const [bookingId, setBookingId] = useState("");
     const router = useRouter();
 
     const handleOpen = () => {
@@ -43,7 +48,9 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
                 confirmButtonColor: "#2563EB",
             }).then((result) => {
                 if (result.isConfirmed) {
-                    router.push("/login");
+                    const currentPath = `${window.location.pathname}${window.location.search}`;
+                    const params = new URLSearchParams({ redirect: currentPath });
+                    router.push(`/login?${params.toString()}`);
                 }
             });
             return;
@@ -55,6 +62,8 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
         setIsOpen(false);
         setSelectedDate(null);
         setSelectedTimeSlot(null);
+        setClientSecret("");
+        setBookingId("");
     };
 
     const handleBook = async (e: React.FormEvent) => {
@@ -92,15 +101,23 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
                 return;
             }
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Session Booked!',
-                text: `You have successfully booked a session with ${tutorName}.`,
-                confirmButtonColor: '#10B981',
-            });
+            const responseData = response.data as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+            const paymentPayload = responseData?.data || responseData;
+            const nextClientSecret = paymentPayload?.clientSecret;
+            const nextBookingId = paymentPayload?.booking?.id;
 
-            handleClose();
-            router.push('/dashboard');
+            if (!nextClientSecret || !nextBookingId) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Setup Failed',
+                    text: 'Booking was created, but Stripe did not return payment details.',
+                    confirmButtonColor: '#EF4444',
+                });
+                return;
+            }
+
+            setClientSecret(nextClientSecret);
+            setBookingId(nextBookingId);
 
         } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
             Swal.fire({
@@ -255,126 +272,168 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
 
                             {/* Body */}
                             <div className="overflow-y-auto w-full no-scrollbar">
-                                <form onSubmit={handleBook} className="p-6 space-y-6">
-                                    {/* Price Summary Banner */}
-                                    <div className="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-border shrink-0">
-                                        <span className="font-medium text-muted-foreground">Rate</span>
-                                        <span className="font-bold text-lg text-primary">${pricePerHr}/hr</span>
-                                    </div>
-
-                                    {availability.length === 0 ? (
-                                        <div className="bg-destructive/10 text-destructive text-sm p-4 rounded-xl flex flex-col items-center justify-center text-center py-8">
-                                            <CalendarIcon className="w-10 h-10 mb-2 opacity-50" />
-                                            <p className="font-medium">This tutor has not set their availability yet.</p>
-                                            <p className="mt-1 opacity-80">Please check back later.</p>
-                                        </div>
-                                    ) : (
-                                        <div className="space-y-6">
-                                            {/* Date Selection */}
-                                            <div className="space-y-3">
-                                                <label className="text-sm font-medium text-foreground ml-1 flex items-center">
-                                                    <CalendarIcon className="w-4 h-4 mr-2 text-primary" />
-                                                    Select Available Date
-                                                </label>
-
-                                                {availableDates.length > 0 ? (
-                                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                                        {availableDates.map((d, idx) => (
-                                                            <button
-                                                                type="button"
-                                                                key={idx}
-                                                                onClick={() => {
-                                                                    setSelectedDate(d);
-                                                                    setSelectedTimeSlot(null); // Reset time when date changes
-                                                                }}
-                                                                className={cn(
-                                                                    "p-3 rounded-xl border text-sm flex flex-col items-center justify-center transition-all",
-                                                                    selectedDate && isSameDay(selectedDate, d)
-                                                                        ? "bg-primary border-primary text-white shadow-md"
-                                                                        : "bg-white border-border text-foreground hover:border-primary/50 hover:bg-primary/5"
-                                                                )}
-                                                            >
-                                                                <span className="font-bold">{format(d, 'MMM d')}</span>
-                                                                <span className={cn(
-                                                                    "text-xs mt-0.5",
-                                                                    selectedDate && isSameDay(selectedDate, d) ? "text-primary-foreground/80" : "text-muted-foreground"
-                                                                )}>
-                                                                    {format(d, 'EEEE')}
-                                                                </span>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                ) : (
-                                                    <div className="text-center p-4 bg-slate-50 rounded-xl border border-border text-muted-foreground text-sm">
-                                                        No available dates found in the next two weeks.
-                                                    </div>
-                                                )}
+                                {clientSecret && bookingId ? (
+                                    <div className="p-6 space-y-6">
+                                        <div className="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-border shrink-0">
+                                            <div>
+                                                <span className="font-medium text-muted-foreground">Secure payment</span>
+                                                <p className="text-xs text-muted-foreground mt-1">Booking confirms after payment succeeds.</p>
                                             </div>
-
-                                            {/* Time Selection */}
-                                            <AnimatePresence>
-                                                {selectedDate && (
-                                                    <motion.div
-                                                        initial={{ opacity: 0, height: 0 }}
-                                                        animate={{ opacity: 1, height: 'auto' }}
-                                                        exit={{ opacity: 0, height: 0 }}
-                                                        className="space-y-3 overflow-hidden"
-                                                    >
-                                                        <label className="text-sm font-medium text-foreground ml-1 flex items-center">
-                                                            <Clock className="w-4 h-4 mr-2 text-primary" />
-                                                            Select Time Slot
-                                                        </label>
-
-                                                        {timeSlots.length > 0 ? (
-                                                            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                                                                {timeSlots.map((slot, idx) => (
-                                                                    <button
-                                                                        type="button"
-                                                                        key={idx}
-                                                                        onClick={() => setSelectedTimeSlot(slot)}
-                                                                        className={cn(
-                                                                            "py-3 px-2 rounded-xl border text-sm font-medium transition-all text-center",
-                                                                            selectedTimeSlot === slot
-                                                                                ? "bg-secondary border-secondary text-white shadow-md"
-                                                                                : "bg-white border-border text-foreground hover:border-secondary/50 hover:bg-secondary/5"
-                                                                        )}
-                                                                    >
-                                                                        {(() => {
-                                                                            const [h, m] = slot.split(':');
-                                                                            const date = new Date(2000, 0, 1, parseInt(h), parseInt(m));
-                                                                            return format(date, 'h:mm a');
-                                                                        })()}
-                                                                    </button>
-                                                                ))}
-                                                            </div>
-                                                        ) : (
-                                                            <div className="text-center p-4 bg-orange-50 rounded-xl border border-orange-200 text-orange-600 text-sm">
-                                                                No time slots available on this date.
-                                                            </div>
-                                                        )}
-                                                    </motion.div>
-                                                )}
-                                            </AnimatePresence>
+                                            <span className="font-bold text-lg text-primary">${pricePerHr}</span>
                                         </div>
-                                    )}
 
-                                    <div className="pt-2 shrink-0">
+                                        {!stripePublishableKey || !stripePromise ? (
+                                            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+                                                Stripe publishable key is missing. Add NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY to the client environment.
+                                            </div>
+                                        ) : (
+                                            <Elements
+                                                stripe={stripePromise}
+                                                options={{
+                                                    clientSecret,
+                                                    appearance: {
+                                                        theme: "stripe",
+                                                    },
+                                                }}
+                                            >
+                                                <PaymentForm bookingId={bookingId} />
+                                            </Elements>
+                                        )}
+
                                         <Button
-                                            type="submit"
-                                            disabled={isLoading || !selectedDate || !selectedTimeSlot}
-                                            className="w-full py-6 text-lg rounded-xl bg-primary hover:bg-primary-dark text-white shadow-xl transition-all flex justify-center items-center"
+                                            type="button"
+                                            variant="ghost"
+                                            className="w-full"
+                                            onClick={() => {
+                                                setClientSecret("");
+                                                setBookingId("");
+                                            }}
                                         >
-                                            {isLoading ? (
-                                                <>
-                                                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                                                    Processing...
-                                                </>
-                                            ) : (
-                                                "Confirm Booking"
-                                            )}
+                                            Change Date or Time
                                         </Button>
                                     </div>
-                                </form>
+                                ) : (
+                                    <form onSubmit={handleBook} className="p-6 space-y-6">
+                                        <div className="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-border shrink-0">
+                                            <span className="font-medium text-muted-foreground">Rate</span>
+                                            <span className="font-bold text-lg text-primary">${pricePerHr}/hr</span>
+                                        </div>
+
+                                        {availability.length === 0 ? (
+                                            <div className="bg-destructive/10 text-destructive text-sm p-4 rounded-xl flex flex-col items-center justify-center text-center py-8">
+                                                <CalendarIcon className="w-10 h-10 mb-2 opacity-50" />
+                                                <p className="font-medium">This tutor has not set their availability yet.</p>
+                                                <p className="mt-1 opacity-80">Please check back later.</p>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-6">
+                                                <div className="space-y-3">
+                                                    <label className="text-sm font-medium text-foreground ml-1 flex items-center">
+                                                        <CalendarIcon className="w-4 h-4 mr-2 text-primary" />
+                                                        Select Available Date
+                                                    </label>
+
+                                                    {availableDates.length > 0 ? (
+                                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                                            {availableDates.map((d, idx) => (
+                                                                <button
+                                                                    type="button"
+                                                                    key={idx}
+                                                                    onClick={() => {
+                                                                        setSelectedDate(d);
+                                                                        setSelectedTimeSlot(null);
+                                                                    }}
+                                                                    className={cn(
+                                                                        "p-3 rounded-xl border text-sm flex flex-col items-center justify-center transition-all",
+                                                                        selectedDate && isSameDay(selectedDate, d)
+                                                                            ? "bg-primary border-primary text-white shadow-md"
+                                                                            : "bg-white border-border text-foreground hover:border-primary/50 hover:bg-primary/5"
+                                                                    )}
+                                                                >
+                                                                    <span className="font-bold">{format(d, 'MMM d')}</span>
+                                                                    <span className={cn(
+                                                                        "text-xs mt-0.5",
+                                                                        selectedDate && isSameDay(selectedDate, d) ? "text-primary-foreground/80" : "text-muted-foreground"
+                                                                    )}>
+                                                                        {format(d, 'EEEE')}
+                                                                    </span>
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="text-center p-4 bg-slate-50 rounded-xl border border-border text-muted-foreground text-sm">
+                                                            No available dates found in the next two weeks.
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <AnimatePresence>
+                                                    {selectedDate && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, height: 0 }}
+                                                            animate={{ opacity: 1, height: 'auto' }}
+                                                            exit={{ opacity: 0, height: 0 }}
+                                                            className="space-y-3 overflow-hidden"
+                                                        >
+                                                            <label className="text-sm font-medium text-foreground ml-1 flex items-center">
+                                                                <Clock className="w-4 h-4 mr-2 text-primary" />
+                                                                Select Time Slot
+                                                            </label>
+
+                                                            {timeSlots.length > 0 ? (
+                                                                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                                                    {timeSlots.map((slot, idx) => (
+                                                                        <button
+                                                                            type="button"
+                                                                            key={idx}
+                                                                            onClick={() => setSelectedTimeSlot(slot)}
+                                                                            className={cn(
+                                                                                "py-3 px-2 rounded-xl border text-sm font-medium transition-all text-center",
+                                                                                selectedTimeSlot === slot
+                                                                                    ? "bg-secondary border-secondary text-white shadow-md"
+                                                                                    : "bg-white border-border text-foreground hover:border-secondary/50 hover:bg-secondary/5"
+                                                                            )}
+                                                                        >
+                                                                            {(() => {
+                                                                                const [h, m] = slot.split(':');
+                                                                                const date = new Date(2000, 0, 1, parseInt(h), parseInt(m));
+                                                                                return format(date, 'h:mm a');
+                                                                            })()}
+                                                                        </button>
+                                                                    ))}
+                                                                </div>
+                                                            ) : (
+                                                                <div className="text-center p-4 bg-orange-50 rounded-xl border border-orange-200 text-orange-600 text-sm">
+                                                                    No time slots available on this date.
+                                                                </div>
+                                                            )}
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
+                                        )}
+
+                                        <div className="pt-2 shrink-0">
+                                            <Button
+                                                type="submit"
+                                                disabled={isLoading || !selectedDate || !selectedTimeSlot}
+                                                className="w-full py-6 text-lg rounded-xl bg-primary hover:bg-primary-dark text-white shadow-xl transition-all flex justify-center items-center"
+                                            >
+                                                {isLoading ? (
+                                                    <>
+                                                        <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                                                        Processing...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <CreditCard className="w-5 h-5 mr-2" />
+                                                        Continue to Payment
+                                                    </>
+                                                )}
+                                            </Button>
+                                        </div>
+                                    </form>
+                                )}
                             </div>
                         </motion.div>
                     </div>

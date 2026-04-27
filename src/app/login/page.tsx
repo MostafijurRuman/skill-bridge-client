@@ -32,6 +32,13 @@ const formSchema = z.object({
   }),
 });
 
+const isSafeRedirectPath = (path: string | null): path is string =>
+  typeof path === "string" &&
+  path.startsWith("/") &&
+  !path.startsWith("//") &&
+  !path.startsWith("/login") &&
+  !path.startsWith("/register");
+
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -70,14 +77,19 @@ export default function LoginPage() {
         // Trigger a re-render by updating window location or firing event
         window.dispatchEvent(new Event("auth-change"));
 
-        // Redirect to dashboard based on role or home
-        if (response.user.role === "ADMIN") {
-          router.push("/admin");
-        } else if (response.user.role === "TUTOR") {
-          router.push("/tutor/dashboard");
-        } else {
-          router.push("/dashboard");
-        }
+        const redirectPath =
+          typeof window !== "undefined"
+            ? new URLSearchParams(window.location.search).get("redirect")
+            : null;
+        const defaultPath =
+          response.user.role === "ADMIN"
+            ? "/admin"
+            : response.user.role === "TUTOR"
+              ? "/tutor/dashboard"
+              : "/dashboard";
+
+        // If user came from a specific page, send them back there after login.
+        router.replace(isSafeRedirectPath(redirectPath) ? redirectPath : defaultPath);
       } else {
         throw new Error("Invalid response format");
       }

@@ -18,6 +18,10 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "SkillBridge - Modern EdTech Platform",
   description: "A modern platform for learning and growth",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

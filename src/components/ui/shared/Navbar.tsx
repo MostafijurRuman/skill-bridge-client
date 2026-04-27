@@ -95,7 +95,7 @@ export function Navbar() {
                 <div className="mr-4 flex">
                     <Link href="/" className="mr-6 flex items-center space-x-2">
                         <GraduationCap className="h-8 w-8 text-[#2563EB]" />
-                        <span className="hidden font-bold sm:inline-block text-[#1E40AF] text-xl font-['Poppins',_sans-serif]">
+                        <span className="inline-block font-bold text-[#1E40AF] text-lg sm:text-xl leading-none font-['Poppins',_sans-serif]">
                             SkillBridge
                         </span>
                     </Link>

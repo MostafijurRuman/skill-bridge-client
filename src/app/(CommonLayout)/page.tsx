@@ -196,17 +196,17 @@ export default function Home() {
               SkillBridge connects ambitious students with expert tutors. Fast-track your learning with personalized 1-on-1 sessions.
             </motion.p>
 
-            <motion.div variants={fadeIn} className="w-full max-w-2xl mx-auto pt-4 relative">
-              <form onSubmit={handleSearch} className="flex items-center bg-white rounded-2xl p-2 shadow-lg border border-border/50">
-                <Search className="w-6 h-6 text-muted-foreground ml-3 mr-2" />
+            <motion.div variants={fadeIn} className="w-full max-w-2xl mx-auto pt-4 px-2 sm:px-0 relative">
+              <form onSubmit={handleSearch} className="w-full flex items-center gap-2 bg-white rounded-2xl p-2 shadow-lg border border-border/50">
+                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground ml-1 sm:ml-3 mr-1 sm:mr-2 shrink-0" />
                 <input
                   type="text"
                   placeholder="What do you want to learn today? (e.g. Business, Mathematics)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground px-2 h-12 truncate"
+                  className="flex-1 min-w-0 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground px-1 sm:px-2 h-11 sm:h-12 text-sm sm:text-base truncate"
                 />
-                <Button type="submit" size="lg" className="bg-primary hover:bg-primary-dark text-white rounded-xl px-8 h-12 shadow-md transition-all">
+                <Button type="submit" size="lg" className="bg-primary hover:bg-primary-dark text-white rounded-xl px-4 sm:px-8 h-11 sm:h-12 text-sm sm:text-base shadow-md transition-all shrink-0">
                   Search
                 </Button>
               </form>

@@ -543,7 +543,7 @@ export const addTutorAvailabilitySlot = async (
 
     const attemptBodies: unknown[] = [
       normalized.data,
-      { availability: [normalized.data] },
+      [normalized.data],
     ];
     let lastFailure: { status?: number; message: string } | null = null;
 
@@ -828,14 +828,12 @@ export const updateTutorAvailability = async (
     }));
 
     const attemptBodies: unknown[] = [
-      { availability: normalizedSlots },
-      {
-        availability: normalizedSlots.map((slot) => ({
-          ...slot,
-          day: slot.day.toLowerCase(),
-        })),
-      },
       normalizedSlots,
+      normalizedSlots.map((slot) => ({
+        ...slot,
+        day: slot.day.toLowerCase(),
+      })),
+      { availability: normalizedSlots },
     ];
 
     let lastFailure: AvailabilityAttemptResult | null = null;
