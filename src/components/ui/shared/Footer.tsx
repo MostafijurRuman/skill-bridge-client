@@ -36,9 +36,9 @@ export function Footer() {
                         <h3 className="text-lg font-semibold font-heading mb-6 text-white border-b border-slate-700 pb-2 inline-block">Explore</h3>
                         <ul className="space-y-3 text-slate-400 text-sm">
                             <li><Link href="/tutors" className="hover:text-secondary transition-colors flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>Browse Tutors</span></Link></li>
-                            <li><Link href="/categories" className="hover:text-secondary transition-colors flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>Top Subjects</span></Link></li>
+                            <li><Link href="/#categories" className="hover:text-secondary transition-colors flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>Top Subjects</span></Link></li>
                             <li><Link href="/about" className="hover:text-secondary transition-colors flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>About Us</span></Link></li>
-                            <li><Link href="/how-it-works" className="hover:text-secondary transition-colors flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>How It Works</span></Link></li>
+                            <li><Link href="/#how-it-works" className="hover:text-secondary transition-colors flex items-center space-x-2"><span className="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>How It Works</span></Link></li>
                         </ul>
                     </div>
 

@@ -251,7 +251,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 2: CATEGORIES */}
-      <section className="py-24 bg-muted/30 dark:bg-muted/10 px-4 border-y border-border">
+      <section id="categories" className="py-24 bg-muted/30 dark:bg-muted/10 px-4 border-y border-border">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 space-y-4">
             <h2 className="text-3xl md:text-4xl font-bold font-heading text-foreground">Explore Top Subjects</h2>
@@ -366,7 +366,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 5: HOW IT WORKS */}
-      <section className="py-24 bg-background px-4 border-t border-border">
+      <section id="how-it-works" className="py-24 bg-background px-4 border-t border-border">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 space-y-4">
             <h2 className="text-3xl md:text-4xl font-bold font-heading text-foreground">How SkillBridge Works</h2>
