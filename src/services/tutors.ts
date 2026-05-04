@@ -4,6 +4,7 @@ interface TutorFilters {
     category?: string;
     price?: string | number;
     rating?: string | number;
+    search?: string;
 }
 
 export const getAllTutors = async (filters?: TutorFilters) => {
@@ -18,6 +19,9 @@ export const getAllTutors = async (filters?: TutorFilters) => {
         }
         if (filters?.rating) {
             queryParams.append("rating", filters.rating.toString());
+        }
+        if (filters?.search) {
+            queryParams.append("search", filters.search);
         }
 
         const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";

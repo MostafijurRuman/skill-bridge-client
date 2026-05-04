@@ -14,6 +14,7 @@ export default async function TutorsPage(props: Props) {
     category: typeof searchParams.category === 'string' ? searchParams.category : undefined,
     price: typeof searchParams.price === 'string' ? searchParams.price : undefined,
     rating: typeof searchParams.rating === 'string' ? searchParams.rating : undefined,
+    search: typeof searchParams.search === 'string' ? searchParams.search : undefined,
   };
 
   const response = await getAllTutors(filters);

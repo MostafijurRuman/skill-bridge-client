@@ -44,6 +44,7 @@ import { getAllCategories, Category } from "@/services/categories";
 import TutorCard from "@/components/TutorCard";
 import { TutorType } from "@/types/tutor";
 import { TutorCardSkeleton, GridSkeleton } from "@/components/skeletons";
+import SmartSearch from "@/components/SmartSearch";
 
 function CountUp({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = useRef(null);
@@ -127,17 +128,6 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      // Assuming search maps to a category or general term
-      router.push(`/tutors?category=${encodeURIComponent(searchQuery.trim())}`);
-    } else {
-      router.push(`/tutors`);
-    }
-  };
 
   const [tutors, setTutors] = useState<TutorType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -226,19 +216,7 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={fadeIn} className="w-full max-w-2xl mx-auto pt-4 px-2 sm:px-0 relative">
-              <form onSubmit={handleSearch} className="w-full flex items-center gap-2 bg-card dark:bg-card/60 dark:backdrop-blur-xl rounded-2xl p-2 shadow-lg dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-border/50 dark:border-white/10 transition-all focus-within:ring-2 focus-within:ring-primary/50">
-                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground ml-1 sm:ml-3 mr-1 sm:mr-2 shrink-0" />
-                <input
-                  type="text"
-                  placeholder="What do you want to learn today? (e.g. Business, Mathematics)"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 min-w-0 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground px-1 sm:px-2 h-11 sm:h-12 text-sm sm:text-base truncate"
-                />
-                <Button type="submit" size="lg" className="bg-primary hover:bg-primary-dark text-white rounded-xl px-4 sm:px-8 h-11 sm:h-12 text-sm sm:text-base shadow-md transition-all shrink-0">
-                  Search
-                </Button>
-              </form>
+              <SmartSearch />
             </motion.div>
 
             <motion.div variants={fadeIn} className="pt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground font-medium">
