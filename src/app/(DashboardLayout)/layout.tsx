@@ -8,6 +8,7 @@ import {
 import * as React from "react"
 import { cookies } from "next/headers"
 import { DashboardBreadcrumb } from "@/components/dashboard-breadcrumb"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
     // Determine user role server-side
@@ -43,8 +44,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <SidebarProvider>
             <AppSidebar user={parsedUser} />
             <SidebarInset>
-                <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-border">
-                    <div className="flex items-center gap-2 px-4">
+                <header className="flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b border-border px-4">
+                    <div className="flex items-center gap-2">
                         <SidebarTrigger className="-ml-1" />
                         <Separator
                             orientation="vertical"
@@ -52,8 +53,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
                         />
                         <DashboardBreadcrumb />
                     </div>
+                    <div className="flex items-center gap-2">
+                        <ThemeToggle />
+                    </div>
                 </header>
-                <div className="flex flex-1 flex-col gap-4 p-6 bg-slate-50/50">
+                <div className="flex flex-1 flex-col gap-4 p-6 bg-muted/20">
                     {children}
                 </div>
             </SidebarInset>

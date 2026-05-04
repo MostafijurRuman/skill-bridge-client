@@ -173,8 +173,10 @@ export default function Home() {
       {/* SECTION 1: HERO */}
       <section className="relative pt-24 pb-32 lg:pt-36 lg:pb-40 px-4 overflow-hidden">
         {/* Background Decorative Shapes */}
-        <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-96 h-96 bg-primary/10 dark:bg-primary/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[500px] h-[500px] bg-secondary/10 dark:bg-secondary/20 rounded-full blur-3xl pointer-events-none" />
+        {/* Extra subtle glow for dark mode */}
+        <div className="hidden dark:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/5 rounded-[100%] blur-[120px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
           <motion.div
@@ -183,13 +185,13 @@ export default function Home() {
             variants={staggerContainer}
             className="space-y-8 max-w-4xl"
           >
-            <motion.div variants={fadeIn} className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-border px-4 py-2 rounded-full shadow-sm">
-              <span className="flex h-2 w-2 rounded-full bg-success"></span>
+            <motion.div variants={fadeIn} className="inline-flex items-center space-x-2 bg-card/80 backdrop-blur-sm border border-border px-4 py-2 rounded-full shadow-sm">
+              <span className="flex h-2 w-2 rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
               <span className="text-sm font-medium text-muted-foreground">Over 1,000+ expert tutors online now</span>
             </motion.div>
 
             <motion.h1 variants={fadeIn} className="text-5xl md:text-7xl font-bold font-heading text-foreground leading-tight tracking-tight">
-              Master the Skills of <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Tomorrow</span>
+              Master the Skills of <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary dark:from-blue-400 dark:to-teal-300">Tomorrow</span>
             </motion.h1>
 
             <motion.p variants={fadeIn} className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-sans leading-relaxed">
@@ -197,7 +199,7 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={fadeIn} className="w-full max-w-2xl mx-auto pt-4 px-2 sm:px-0 relative">
-              <form onSubmit={handleSearch} className="w-full flex items-center gap-2 bg-white rounded-2xl p-2 shadow-lg border border-border/50">
+              <form onSubmit={handleSearch} className="w-full flex items-center gap-2 bg-card dark:bg-card/60 dark:backdrop-blur-xl rounded-2xl p-2 shadow-lg dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-border/50 dark:border-white/10 transition-all focus-within:ring-2 focus-within:ring-primary/50">
                 <Search className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground ml-1 sm:ml-3 mr-1 sm:mr-2 shrink-0" />
                 <input
                   type="text"
@@ -222,7 +224,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 2: CATEGORIES */}
-      <section className="py-24 bg-white px-4 border-y border-border">
+      <section className="py-24 bg-muted/30 dark:bg-muted/10 px-4 border-y border-border">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 space-y-4">
             <h2 className="text-3xl md:text-4xl font-bold font-heading text-foreground">Explore Top Subjects</h2>
@@ -243,7 +245,7 @@ export default function Home() {
               return (
                 <motion.div key={category.id} variants={fadeIn}>
                   <Link href={`/tutors?category=${encodeURIComponent(category.name)}`} className="group block h-full">
-                    <div className="flex flex-col items-center justify-center p-6 bg-background rounded-2xl border border-border hover:shadow-xl transition-all duration-300 h-full group-hover:-translate-y-1">
+                    <div className="flex flex-col items-center justify-center p-6 bg-card dark:bg-card/40 dark:backdrop-blur-sm rounded-2xl border border-border hover:shadow-xl dark:hover:shadow-primary/5 dark:hover:border-primary/30 transition-all duration-300 h-full group-hover:-translate-y-1">
                       <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 transition-colors duration-300 ${style.color} ${style.hover}`}>
                         <Icon className="w-7 h-7" />
                       </div>
@@ -299,7 +301,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 4: HOW IT WORKS */}
-      <section className="py-24 bg-white px-4 border-t border-border">
+      <section className="py-24 bg-muted/30 dark:bg-muted/10 px-4 border-t border-border">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 space-y-4">
             <h2 className="text-3xl md:text-4xl font-bold font-heading text-foreground">How SkillBridge Works</h2>
@@ -321,9 +323,9 @@ export default function Home() {
                   transition={{ delay: index * 0.2, duration: 0.6 }}
                   className="relative z-10 flex flex-col items-center text-center space-y-4"
                 >
-                  <div className="w-24 h-24 rounded-full bg-white shadow-xl border-4 border-white flex items-center justify-center mb-2 z-10 relative group">
+                  <div className="w-24 h-24 rounded-full bg-card shadow-xl border-4 border-card dark:border-muted/50 flex items-center justify-center mb-2 z-10 relative group">
                     <div className="absolute inset-0 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors" />
-                    <Icon className="w-10 h-10 text-primary z-10" />
+                    <Icon className="w-10 h-10 text-primary z-10 drop-shadow-sm" />
                     <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-secondary text-white font-bold flex items-center justify-center shadow-md">
                       {index + 1}
                     </div>
@@ -338,10 +340,10 @@ export default function Home() {
       </section>
 
       {/* SECTION 5: CTA / STATS */}
-      <section className="py-20 bg-primary px-4 relative overflow-hidden">
+      <section className="py-20 bg-primary dark:bg-slate-900 px-4 relative overflow-hidden dark:border-t dark:border-border">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-        <div className="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute left-0 bottom-0 -translate-x-1/4 translate-y-1/4 w-96 h-96 bg-secondary/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-96 h-96 bg-white/10 dark:bg-primary/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute left-0 bottom-0 -translate-x-1/4 translate-y-1/4 w-96 h-96 bg-secondary/30 dark:bg-secondary/20 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -353,10 +355,10 @@ export default function Home() {
                 Join thousands of students and tutors who are already transforming their careers and lives on SkillBridge.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                <Button size="lg" className="bg-white text-primary hover:bg-background font-bold rounded-xl px-8 h-14 shadow-lg w-full sm:w-auto transition-all">
+                <Button size="lg" className="bg-card text-primary hover:bg-background font-bold rounded-xl px-8 h-14 shadow-lg w-full sm:w-auto transition-all dark:bg-primary dark:text-white dark:hover:bg-primary/90">
                   Join as Student
                 </Button>
-                <Button variant="outline" size="lg" className="border-white/30 text-white bg-blue-600 hover:bg-white hover:text-blue-600 font-bold rounded-xl px-8 h-14 shadow-sm w-full sm:w-auto transition-all">
+                <Button variant="outline" size="lg" className="border-white/30 text-white bg-blue-600 dark:bg-transparent hover:bg-white hover:text-blue-600 dark:hover:bg-white/10 dark:hover:text-white font-bold rounded-xl px-8 h-14 shadow-sm w-full sm:w-auto transition-all">
                   Become a Tutor
                 </Button>
               </div>

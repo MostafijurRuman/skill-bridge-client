@@ -200,16 +200,16 @@ export default function BookingCard({
     // Normalize status. The UI relies on the 'currentStatus'
     const normalizedStatus = status.toLowerCase() === "canceled" || status.toLowerCase() === "cancelled" ? "cancelled" : status.toLowerCase();
 
-    let statusColor = "bg-yellow-100 text-yellow-800"
-    if (normalizedStatus === "confirmed") statusColor = "bg-green-100 text-green-800"
-    if (normalizedStatus === "cancelled") statusColor = "bg-red-100 text-red-800"
-    if (normalizedStatus === "completed") statusColor = "bg-blue-100 text-blue-800"
+    let statusColor = "bg-amber-100/50 dark:bg-amber-500/20 text-amber-800 dark:text-amber-400 border border-amber-200/50 dark:border-amber-500/20"
+    if (normalizedStatus === "confirmed") statusColor = "bg-green-100/50 dark:bg-green-500/20 text-green-800 dark:text-green-400 border border-green-200/50 dark:border-green-500/20"
+    if (normalizedStatus === "cancelled") statusColor = "bg-red-100/50 dark:bg-red-500/20 text-red-800 dark:text-red-400 border border-red-200/50 dark:border-red-500/20"
+    if (normalizedStatus === "completed") statusColor = "bg-blue-100/50 dark:bg-blue-500/20 text-blue-800 dark:text-blue-400 border border-blue-200/50 dark:border-blue-500/20"
 
     const normalizedPaymentStatus = String(defaultBooking.paymentStatus || "PENDING").toLowerCase();
-    let paymentColor = "bg-amber-100 text-amber-800";
-    if (normalizedPaymentStatus === "paid") paymentColor = "bg-emerald-100 text-emerald-800";
-    if (normalizedPaymentStatus === "failed") paymentColor = "bg-red-100 text-red-800";
-    if (normalizedPaymentStatus === "refunded") paymentColor = "bg-slate-100 text-slate-700";
+    let paymentColor = "bg-amber-100/50 dark:bg-amber-500/20 text-amber-800 dark:text-amber-400";
+    if (normalizedPaymentStatus === "paid") paymentColor = "bg-emerald-100/50 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-400";
+    if (normalizedPaymentStatus === "failed") paymentColor = "bg-red-100/50 dark:bg-red-500/20 text-red-800 dark:text-red-400";
+    if (normalizedPaymentStatus === "refunded") paymentColor = "bg-muted text-muted-foreground";
     const amountText = typeof defaultBooking.amount === "number"
         ? `$${(defaultBooking.amount / 100).toFixed(2)}`
         : null;
@@ -219,76 +219,76 @@ export default function BookingCard({
 
     return (
         <>
-            <div className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col hover:shadow-md transition-shadow relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-indigo-500"></div>
+            <div className="bg-card p-6 rounded-3xl border border-border shadow-sm flex flex-col hover:shadow-md dark:shadow-[0_4px_20px_rgb(0,0,0,0.1)] transition-shadow relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-70 group-hover:opacity-100 transition-opacity"></div>
 
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 border border-slate-200 overflow-hidden">
+                        <div className="w-12 h-12 rounded-2xl bg-muted/50 flex items-center justify-center text-muted-foreground border border-border overflow-hidden">
                             {defaultBooking.tutor?.user?.image ? (
                                 <img src={defaultBooking.tutor.user.image} alt={tutorName} className="w-full h-full object-cover" />
                             ) : (
-                                <User className="w-5 h-5" />
+                                <User className="w-6 h-6" />
                             )}
                         </div>
                         <div>
-                            <h3 className="font-semibold text-slate-900">{tutorName}</h3>
-                            <p className="text-xs text-slate-500 flex items-center gap-1">
-                                <GraduationCap className="w-3 h-3" />
+                            <h3 className="font-bold text-foreground font-heading">{tutorName}</h3>
+                            <p className="text-xs font-medium text-muted-foreground flex items-center gap-1 mt-0.5">
+                                <GraduationCap className="w-3.5 h-3.5 text-primary" />
                                 {tutorSubject}
                             </p>
                         </div>
                     </div>
 
-                    <span className={`${statusColor} capitalize px-3 py-1 text-xs font-semibold rounded-full`}>
+                    <span className={`${statusColor} capitalize px-3 py-1 text-xs font-bold rounded-xl`}>
                         {normalizedStatus === "cancelled" ? "Canceled" : status}
                     </span>
                 </div>
 
                 <div className="space-y-3 flex-1 mb-6">
-                    <div className={`flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-sm font-medium ${paymentColor}`}>
+                    <div className={`flex items-center justify-between gap-2 rounded-xl px-4 py-2.5 text-sm font-bold ${paymentColor}`}>
                         <span className="flex items-center gap-2 capitalize">
                             <CreditCard className="w-4 h-4" />
                             {normalizedPaymentStatus}
                         </span>
                         {amountText && <span>{amountText}</span>}
                     </div>
-                    <div className="flex flex-col gap-1.5 p-3 bg-slate-50 border border-slate-100 rounded-xl">
-                        <div className="flex items-center gap-2 text-sm text-slate-700">
+                    <div className="flex flex-col gap-1.5 p-4 bg-muted/30 border border-border/50 rounded-2xl transition-colors hover:bg-muted/50">
+                        <div className="flex items-center gap-2 text-sm text-foreground">
                             <Calendar className="w-4 h-4 text-primary" />
                             <span className="font-medium">
                                 {isValidDate ? date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : "Date TBD"}
                             </span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-slate-700">
+                        <div className="flex items-center gap-2 text-sm text-foreground">
                             <Clock className="w-4 h-4 text-primary" />
-                            <span>
+                            <span className="font-medium font-mono text-xs mt-0.5">
                                 {isValidDate ? date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : "Time TBD"}
                             </span>
                         </div>
                     </div>
                     {defaultBooking.meetingLink && normalizedStatus !== "cancelled" && (
-                        <div className="flex items-center gap-2 text-sm text-slate-700 bg-blue-50/50 p-2.5 rounded-lg border border-blue-100">
+                        <div className="flex items-center gap-2 text-sm text-foreground font-medium bg-blue-500/10 p-3 rounded-2xl border border-blue-500/20 transition-colors hover:bg-blue-500/20">
                             <Video className="w-4 h-4 text-blue-500" />
-                            <a href={defaultBooking.meetingLink} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline truncate">
+                            <a href={defaultBooking.meetingLink} target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline truncate">
                                 Join Meeting
                             </a>
                         </div>
                     )}
 
                     {hasReviewed && (
-                        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 space-y-2">
+                        <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-4 space-y-2">
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2 text-emerald-700">
+                                <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
                                     <CheckCircle2 className="w-4 h-4" />
-                                    <span className="text-sm font-semibold">Review Submitted</span>
+                                    <span className="text-sm font-bold">Review Submitted</span>
                                 </div>
                                 {review && (
                                     <div className="flex text-amber-500">
                                         {[1, 2, 3, 4, 5].map((num) => (
                                             <Star
                                                 key={num}
-                                                className={`w-4 h-4 ${review.rating >= num ? "fill-amber-500" : "fill-none"}`}
+                                                className={`w-4 h-4 ${review.rating >= num ? "fill-amber-500" : "fill-none opacity-30"}`}
                                             />
                                         ))}
                                     </div>
@@ -296,11 +296,11 @@ export default function BookingCard({
                             </div>
 
                             {review?.comment && (
-                                <p className="text-sm text-slate-700 leading-relaxed">{review.comment}</p>
+                                <p className="text-sm text-foreground/80 leading-relaxed italic border-l-2 border-emerald-500/50 pl-2 mt-2">{review.comment}</p>
                             )}
 
                             {review?.createdAt && (
-                                <p className="text-xs text-slate-500">
+                                <p className="text-xs text-muted-foreground font-medium mt-1">
                                     {new Date(review.createdAt).toLocaleDateString("en-US", {
                                         month: "short",
                                         day: "numeric",
@@ -316,7 +316,7 @@ export default function BookingCard({
                     {normalizedStatus === "completed" && !hasReviewed ? (
                         <button
                             onClick={() => setIsReviewOpen(true)}
-                            className="w-full py-2.5 px-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-xl transition-colors text-sm flex items-center justify-center gap-2"
+                            className="w-full py-3 px-4 bg-primary hover:bg-primary-dark text-white font-bold rounded-2xl transition-colors text-sm flex items-center justify-center gap-2 shadow-md"
                         >
                             <Star className="w-4 h-4" />
                             Leave Review
@@ -324,7 +324,7 @@ export default function BookingCard({
                     ) : normalizedStatus === "completed" && hasReviewed ? (
                         <button
                             disabled
-                            className="w-full py-2.5 px-4 bg-emerald-100 text-emerald-700 font-medium rounded-xl text-sm flex items-center justify-center gap-2 cursor-not-allowed"
+                            className="w-full py-3 px-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold rounded-2xl text-sm flex items-center justify-center gap-2 cursor-not-allowed"
                         >
                             <CheckCircle2 className="w-4 h-4" />
                             Completed
@@ -333,9 +333,9 @@ export default function BookingCard({
                         <button
                             onClick={handleCancel}
                             disabled={normalizedStatus === "cancelled" || normalizedStatus === "completed" || isCancelling}
-                            className={`w-full py-2.5 px-4 border font-medium rounded-xl transition-colors text-sm flex items-center justify-center gap-2 ${normalizedStatus === "cancelled" || normalizedStatus === "completed"
-                                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-transparent'
-                                    : 'bg-white border-red-200 hover:bg-red-50 text-red-600'
+                            className={`w-full py-3 px-4 border font-bold rounded-2xl transition-colors text-sm flex items-center justify-center gap-2 ${normalizedStatus === "cancelled" || normalizedStatus === "completed"
+                                    ? 'bg-muted/50 text-muted-foreground cursor-not-allowed border-transparent'
+                                    : 'bg-card border-red-500/30 hover:bg-red-500/10 text-red-600 dark:text-red-400 shadow-sm'
                                 }`}
                         >
                             {isCancelling && <Loader2 className="w-4 h-4 animate-spin" />}
@@ -346,51 +346,51 @@ export default function BookingCard({
             </div>
 
             {isReviewOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
-                    <div className="bg-white rounded-2xl w-full max-w-md shadow-lg overflow-hidden flex flex-col">
-                        <div className="p-6 border-b border-border">
-                            <h2 className="text-xl font-bold font-heading">Leave a Review</h2>
-                            <p className="text-muted-foreground text-sm mt-1">Share your experience with {tutorName}</p>
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+                    <div className="bg-card rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col border border-border">
+                        <div className="p-6 border-b border-border bg-muted/20">
+                            <h2 className="text-xl font-bold font-heading text-foreground">Leave a Review</h2>
+                            <p className="text-muted-foreground text-sm mt-1">Share your experience with <span className="font-bold text-foreground">{tutorName}</span></p>
                         </div>
-                        <form onSubmit={handleReviewSubmit} className="p-6 flex flex-col gap-5">
-                            <div className="flex flex-col gap-2 relative">
-                                <label className="text-sm font-semibold text-slate-700">Rating</label>
+                        <form onSubmit={handleReviewSubmit} className="p-6 flex flex-col gap-6">
+                            <div className="flex flex-col gap-3 relative items-center text-center">
+                                <label className="text-sm font-bold text-foreground">How was your session?</label>
                                 <div className="flex gap-2">
                                     {[1, 2, 3, 4, 5].map((num) => (
                                         <button
                                             type="button"
                                             key={num}
                                             onClick={() => setRating(num)}
-                                            className={`p-2 rounded-full transition-colors focus:ring-2 focus:ring-primary/20 focus:outline-none ${rating >= num ? "text-yellow-500" : "text-slate-300 hover:text-yellow-200"}`}
+                                            className={`p-2 rounded-full transition-all focus:ring-2 focus:ring-primary/20 focus:outline-none hover:scale-110 ${rating >= num ? "text-amber-400" : "text-muted-foreground/30 hover:text-amber-200"}`}
                                         >
-                                            <Star fill={rating >= num ? "currentColor" : "none"} className="w-8 h-8" />
+                                            <Star fill={rating >= num ? "currentColor" : "none"} className="w-10 h-10" />
                                         </button>
                                     ))}
                                 </div>
                             </div>
                             <div className="flex flex-col gap-2 relative">
-                                <label htmlFor="comment" className="text-sm font-semibold text-slate-700">Comment</label>
+                                <label htmlFor="comment" className="text-sm font-bold text-foreground ml-1">Your Comment</label>
                                 <textarea
                                     id="comment"
                                     required
                                     value={comment}
                                     onChange={(e) => setComment(e.target.value)}
-                                    placeholder="How was your session?"
-                                    className="min-h-[100px] w-full border border-input rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all bg-white resize-y"
+                                    placeholder="Write your review here..."
+                                    className="min-h-[120px] w-full border border-border bg-muted/50 rounded-2xl p-4 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y text-foreground"
                                 ></textarea>
                             </div>
-                            <div className="flex justify-end gap-3 mt-4">
+                            <div className="flex justify-end gap-3 mt-2">
                                 <button
                                     type="button"
                                     onClick={() => setIsReviewOpen(false)}
-                                    className="px-4 py-2 text-sm font-medium rounded-lg text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors"
+                                    className="px-5 py-2.5 text-sm font-bold rounded-xl text-foreground border border-border bg-card hover:bg-muted/50 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isSubmittingReview}
-                                    className="px-5 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-70 flex items-center gap-2"
+                                    className="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-dark transition-colors shadow-md disabled:opacity-70 flex items-center gap-2"
                                 >
                                     {isSubmittingReview && <Loader2 className="w-4 h-4 animate-spin" />}
                                     Submit Review

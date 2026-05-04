@@ -57,78 +57,111 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #F8FAFC;
-  --foreground: #0F172A;
-  --card: #FFFFFF;
-  --card-foreground: #0F172A;
-  --popover: #FFFFFF;
-  --popover-foreground: #0F172A;
+  
+  /* Custom Color Scale */
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #F1F5F9;
+  --card-bg: #FFFFFF;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --border-color: #E2E8F0;
+
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+  --card: var(--card-bg);
+  --card-foreground: var(--text-primary);
+  --popover: var(--card-bg);
+  --popover-foreground: var(--text-primary);
   --primary: #2563EB;
   --primary-foreground: #FFFFFF;
   --secondary: #14B8A6;
   --secondary-foreground: #FFFFFF;
-  --muted: #F1F5F9;
-  --muted-foreground: #475569;
+  --muted: var(--bg-secondary);
+  --muted-foreground: var(--text-secondary);
   --accent: #F59E0B;
   --accent-foreground: #FFFFFF;
   --destructive: #EF4444;
-  --border: #E2E8F0;
-  --input: #E2E8F0;
+  --border: var(--border-color);
+  --input: var(--border-color);
   --ring: #2563EB;
   --chart-1: #2563EB;
   --chart-2: #14B8A6;
   --chart-3: #F59E0B;
   --chart-4: #22C55E;
   --chart-5: #0EA5E9;
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #0F172A;
+  --sidebar: var(--card-bg);
+  --sidebar-foreground: var(--text-primary);
   --sidebar-primary: #2563EB;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F8FAFC;
+  --sidebar-accent: var(--bg-primary);
   --sidebar-accent-foreground: #1E40AF;
-  --sidebar-border: #E2E8F0;
+  --sidebar-border: var(--border-color);
   --sidebar-ring: #2563EB;
 }
 
 .dark {
-  --background: #0F172A;
-  --foreground: #F8FAFC;
-  --card: #1E293B;
-  --card-foreground: #F8FAFC;
-  --popover: #1E293B;
-  --popover-foreground: #F8FAFC;
+  /* Premium Dark Mode Scale (SaaS Style) */
+  --bg-primary: #020617; /* Very dark slate, almost black */
+  --bg-secondary: #0F172A; /* Slightly lighter slate */
+  --card-bg: #0B1121; /* Card background with slight depth */
+  --text-primary: #F8FAFC; /* Crisp white */
+  --text-secondary: #CBD5E1; /* Slate 300 for highly readable secondary text */
+  --border-color: #1E293B; /* Subtle slate border */
+
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+  --card: var(--card-bg);
+  --card-foreground: var(--text-primary);
+  --popover: var(--card-bg);
+  --popover-foreground: var(--text-primary);
   --primary: #3B82F6;
   --primary-foreground: #FFFFFF;
   --secondary: #2DD4BF;
-  --secondary-foreground: #0F172A;
-  --muted: #1E293B;
-  --muted-foreground: #94A3B8;
+  --secondary-foreground: #020617;
+  --muted: var(--bg-secondary);
+  --muted-foreground: var(--text-secondary);
   --accent: #FBBF24;
-  --accent-foreground: #0F172A;
+  --accent-foreground: #020617;
   --destructive: #F87171;
-  --border: #334155;
-  --input: #334155;
+  --border: var(--border-color);
+  --input: var(--border-color);
   --ring: #3B82F6;
   --chart-1: #3B82F6;
   --chart-2: #2DD4BF;
   --chart-3: #FBBF24;
   --chart-4: #4ADE80;
   --chart-5: #38BDF8;
-  --sidebar: #0F172A;
-  --sidebar-foreground: #F8FAFC;
+  --sidebar: var(--bg-secondary);
+  --sidebar-foreground: var(--text-primary);
   --sidebar-primary: #3B82F6;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #1E293B;
-  --sidebar-accent-foreground: #F8FAFC;
-  --sidebar-border: #334155;
+  --sidebar-accent: var(--card-bg);
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border-color);
   --sidebar-ring: #3B82F6;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-all duration-300 ease-in-out;
   }
+}
+
+/* View Transitions API for Dark Mode Toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+.dark::view-transition-old(root) {
+  z-index: 1;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 999;
 }

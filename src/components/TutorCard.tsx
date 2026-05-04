@@ -23,17 +23,17 @@ export default function TutorCard({ tutor }: TutorCardProps) {
     };
 
     return (
-        <motion.div variants={fadeIn} className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col h-full">
-            <div className="h-24 bg-gradient-to-r from-primary/10 to-secondary/10 relative">
+        <motion.div variants={fadeIn} className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-xl dark:shadow-[0_4px_20px_rgb(0,0,0,0.2)] dark:hover:shadow-primary/10 dark:hover:border-primary/50 transition-all duration-300 group flex flex-col h-full relative">
+            <div className="h-24 bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 relative">
                 <img
                     src={getAvatarUrl()}
                     alt={tutor.user?.name || "Tutor"}
-                    className="w-20 h-20 rounded-full border-4 border-white absolute -bottom-10 left-6 object-cover bg-white shadow-sm"
+                    className="w-20 h-20 rounded-full border-4 border-card absolute -bottom-10 left-6 object-cover bg-card shadow-md transition-transform duration-300 group-hover:scale-105"
                     onError={(e) => {
                         (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tutor.user?.name || "Tutor")}&background=2563EB&color=fff&size=150`;
                     }}
                 />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur text-foreground px-3 py-1 rounded-full text-sm font-bold shadow-sm">
+                <div className="absolute top-4 right-4 bg-background/90 dark:bg-card/80 backdrop-blur-md text-foreground px-3 py-1 rounded-full text-sm font-bold shadow-sm border border-border/50">
                     ${tutor.pricePerHr}/hr
                 </div>
             </div>
@@ -50,7 +50,7 @@ export default function TutorCard({ tutor }: TutorCardProps) {
                     <span className="font-bold text-foreground">{Number(tutor.rating || 0).toFixed(1)}</span>
                 </div>
                 <Link href={`/tutors/${tutor.id}`} className="w-full mt-auto">
-                    <Button className="w-full bg-background text-foreground border border-border hover:bg-primary hover:text-white transition-all rounded-xl">
+                    <Button className="w-full bg-background dark:bg-muted text-foreground border border-border hover:bg-primary hover:text-white dark:hover:bg-primary transition-all rounded-xl">
                         View Profile
                     </Button>
                 </Link>

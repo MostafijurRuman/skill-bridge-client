@@ -76,59 +76,77 @@ export default function TutorFilters() {
     };
 
     return (
-        <form onSubmit={applyFilters} className="bg-white p-6 rounded-2xl border border-border shadow-sm space-y-6">
+        <form onSubmit={applyFilters} className="bg-card dark:bg-card/40 dark:backdrop-blur-xl p-6 rounded-3xl border border-border shadow-sm dark:shadow-[0_4px_20px_rgb(0,0,0,0.2)] space-y-6">
             <div className="flex items-center space-x-2 pb-4 border-b border-border">
                 <Filter className="w-5 h-5 text-primary" />
                 <h3 className="font-heading font-bold text-lg text-foreground">Filter Tutors</h3>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
+                {/* Category */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Category</label>
-                    <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        className="w-full bg-background border border-border text-foreground rounded-xl px-4 py-2.5 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                    >
-                        <option value="">All Categories</option>
-                        {dbCategories.map((cat) => (
-                            <option key={cat.id} value={cat.name}>{cat.name}</option>
-                        ))}
-                    </select>
+                    <label className="text-sm font-medium text-foreground ml-1">Category</label>
+                    <div className="relative">
+                        <select
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                            className={`w-full bg-background border ${category ? 'border-primary ring-1 ring-primary/20' : 'border-border'} text-foreground rounded-2xl px-4 py-3 pl-10 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none cursor-pointer`}
+                        >
+                            <option value="">All Categories</option>
+                            {dbCategories.map((cat) => (
+                                <option key={cat.id} value={cat.name}>{cat.name}</option>
+                            ))}
+                        </select>
+                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
                 </div>
 
+                {/* Price */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Max Price per Hour ($)</label>
-                    <input
-                        type="number"
-                        min="0"
-                        placeholder="e.g. 50"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        className="w-full bg-background border border-border text-foreground rounded-xl px-4 py-2.5 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                    />
+                    <label className="text-sm font-medium text-foreground ml-1">Max Price / Hr</label>
+                    <div className="relative">
+                        <input
+                            type="number"
+                            min="0"
+                            placeholder="e.g. 50"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            className={`w-full bg-background border ${price ? 'border-primary ring-1 ring-primary/20' : 'border-border'} text-foreground rounded-2xl px-4 py-3 pl-10 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all`}
+                        />
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-muted-foreground">$</span>
+                    </div>
                 </div>
 
+                {/* Rating */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Minimum Rating</label>
-                    <select
-                        value={rating}
-                        onChange={(e) => setRating(e.target.value)}
-                        className="w-full bg-background border border-border text-foreground rounded-xl px-4 py-2.5 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                    >
-                        <option value="">Any Rating</option>
-                        <option value="5">5 Stars</option>
-                        <option value="4">4+ Stars</option>
-                        <option value="3">3+ Stars</option>
-                    </select>
+                    <label className="text-sm font-medium text-foreground ml-1">Minimum Rating</label>
+                    <div className="relative">
+                        <select
+                            value={rating}
+                            onChange={(e) => setRating(e.target.value)}
+                            className={`w-full bg-background border ${rating ? 'border-primary ring-1 ring-primary/20' : 'border-border'} text-foreground rounded-2xl px-4 py-3 pl-10 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none cursor-pointer`}
+                        >
+                            <option value="">Any Rating</option>
+                            <option value="5">5 Stars</option>
+                            <option value="4">4+ Stars</option>
+                            <option value="3">3+ Stars</option>
+                        </select>
+                        <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-accent fill-accent/20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div className="flex flex-col gap-3 pt-4 border-t border-border">
-                <Button type="submit" className="w-full bg-primary hover:bg-primary-dark text-white rounded-xl shadow-md transition-all">
+            <div className="flex flex-col gap-3 pt-6 border-t border-border">
+                <Button type="submit" className="w-full bg-gradient-to-r from-primary to-blue-500 hover:from-primary-dark hover:to-primary text-white rounded-2xl h-12 shadow-[0_4px_14px_0_rgb(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] transition-all font-bold text-base">
                     Apply Filters
                 </Button>
-                <Button type="button" variant="outline" onClick={clearFilters} className="w-full rounded-xl">
+                <Button type="button" variant="outline" onClick={clearFilters} className="w-full rounded-2xl h-12 border-border text-muted-foreground hover:text-foreground hover:bg-muted font-semibold transition-all">
                     Clear All
                 </Button>
             </div>

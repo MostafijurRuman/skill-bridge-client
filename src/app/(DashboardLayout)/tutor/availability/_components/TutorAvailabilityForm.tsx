@@ -285,62 +285,63 @@ export default function TutorAvailabilityForm({
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-      <div className="bg-white p-6 rounded-2xl border border-border shadow-sm h-fit">
-        <h2 className="text-lg font-bold font-heading text-slate-900 mb-3">Tips</h2>
-        <ul className="text-sm text-slate-600 space-y-2">
+      <div className="bg-card p-6 sm:p-8 rounded-3xl border border-border shadow-sm h-fit relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
+        <h2 className="text-xl font-bold font-heading text-foreground mb-4 relative z-10">Tips</h2>
+        <ul className="text-sm font-medium text-muted-foreground space-y-3 relative z-10 list-disc list-inside">
           <li>Use at least one slot to appear bookable for students.</li>
           <li>Avoid overlapping slots on the same day.</li>
           <li>Keep times consistent with your local teaching schedule.</li>
         </ul>
 
-        <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-3">
-          <p className="text-xs text-blue-700">
-            Slots configured: <span className="font-semibold">{slots.length}</span>
+        <div className="mt-8 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-4 relative z-10">
+          <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+            Slots configured: <span className="font-bold text-lg ml-1">{slots.length}</span>
           </p>
         </div>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="xl:col-span-2 bg-white p-6 rounded-2xl border border-border shadow-sm space-y-5"
+        className="xl:col-span-2 bg-card p-6 sm:p-8 rounded-3xl border border-border shadow-sm space-y-6"
       >
         {error && (
-          <div className="p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm">
+          <div className="p-4 rounded-2xl border border-destructive/20 bg-destructive/10 text-destructive text-sm font-bold shadow-sm">
             {error}
           </div>
         )}
         {success && (
-          <div className="p-3 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm">
+          <div className="p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-sm font-bold shadow-sm">
             {success}
           </div>
         )}
 
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold font-heading text-slate-900">Weekly Slots</h2>
-          <Button type="button" variant="outline" onClick={addSlot}>
-            <Plus className="w-4 h-4" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
+          <h2 className="text-2xl font-bold font-heading text-foreground">Weekly Slots</h2>
+          <Button type="button" variant="outline" onClick={addSlot} className="font-bold bg-muted/30 border-border hover:bg-muted/50 rounded-xl">
+            <Plus className="w-4 h-4 mr-2 text-primary" />
             Add Slot
           </Button>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           {slots.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+            <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-10 text-center text-sm font-medium text-muted-foreground">
               No slots set. Add one to get started.
             </div>
           ) : (
             slots.map((slot, index) => (
               <div
                 key={slot.localId}
-                className="rounded-xl border border-border p-4 grid grid-cols-1 md:grid-cols-4 gap-3 items-end"
+                className="rounded-2xl border border-border bg-muted/10 p-5 grid grid-cols-1 md:grid-cols-4 gap-4 items-end transition-colors hover:border-primary/30"
               >
                 <div className="space-y-2">
-                  <Label htmlFor={`day-${slot.localId}`}>Day</Label>
+                  <Label htmlFor={`day-${slot.localId}`} className="font-bold text-foreground">Day</Label>
                   <select
                     id={`day-${slot.localId}`}
                     value={slot.day}
                     onChange={(event) => updateSlot(slot.localId, { day: event.target.value })}
-                    className="h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus:ring-2 focus:ring-primary/20"
+                    className="h-11 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-primary/20 text-foreground font-medium"
                   >
                     {DAYS.map((day) => (
                       <option key={day} value={day}>
@@ -351,69 +352,69 @@ export default function TutorAvailabilityForm({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`start-${slot.localId}`}>Start Time</Label>
+                  <Label htmlFor={`start-${slot.localId}`} className="font-bold text-foreground">Start Time</Label>
                   <input
                     id={`start-${slot.localId}`}
                     type="time"
                     value={slot.startTime}
                     onChange={(event) => updateSlot(slot.localId, { startTime: event.target.value })}
-                    className="h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus:ring-2 focus:ring-primary/20"
+                    className="h-11 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-primary/20 text-foreground font-mono"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`end-${slot.localId}`}>End Time</Label>
+                  <Label htmlFor={`end-${slot.localId}`} className="font-bold text-foreground">End Time</Label>
                   <input
                     id={`end-${slot.localId}`}
                     type="time"
                     value={slot.endTime}
                     onChange={(event) => updateSlot(slot.localId, { endTime: event.target.value })}
-                    className="h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus:ring-2 focus:ring-primary/20"
+                    className="h-11 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-primary/20 text-foreground font-mono"
                   />
                 </div>
 
                 <Button
                   type="button"
                   variant="outline"
-                  className="text-red-600 hover:text-red-700"
+                  className="h-11 font-bold rounded-xl text-destructive hover:text-white border-destructive/30 bg-destructive/5 hover:bg-destructive transition-colors w-full md:w-auto"
                   onClick={() => removeSlot(slot.localId)}
                   disabled={isSaving}
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-4 h-4 mr-2" />
                   Remove
                 </Button>
 
-                <p className="text-xs text-muted-foreground md:col-span-4">
-                  Slot {index + 1}: {slot.day}, {slot.startTime} - {slot.endTime}
+                <p className="text-xs font-medium text-muted-foreground md:col-span-4 mt-2">
+                  Slot <span className="text-foreground">{index + 1}</span>: {slot.day}, {slot.startTime} - {slot.endTime}
                 </p>
               </div>
             ))
           )}
         </div>
 
-        <div className="pt-2 flex items-center gap-3">
-          <Button type="submit" disabled={isSaving} className="min-w-36">
+        <div className="pt-4 flex items-center gap-3 border-t border-border mt-4">
+          <Button type="submit" disabled={isSaving} className="min-w-36 h-11 rounded-xl font-bold bg-primary hover:bg-primary-dark shadow-md">
             {isSaving ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
                 Saving...
               </>
             ) : (
               <>
-                <Save className="w-4 h-4" />
+                <Save className="w-4 h-4 mr-2" />
                 Save Availability
               </>
             )}
           </Button>
 
-          <Button type="button" variant="outline" onClick={handleReset} disabled={isSaving}>
+          <Button type="button" variant="outline" onClick={handleReset} disabled={isSaving} className="h-11 rounded-xl font-bold border-border bg-card hover:bg-muted/50">
             Reset
           </Button>
         </div>
 
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 flex items-start gap-2 text-amber-700 text-xs">
-          <CalendarPlus className="w-4 h-4 mt-0.5" />
-          Students can only book within your configured slots.
+        <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-start gap-3 text-amber-600 dark:text-amber-400 text-sm font-medium">
+          <CalendarPlus className="w-5 h-5 shrink-0" />
+          <p>Students can only book within your configured slots.</p>
         </div>
       </form>
     </div>

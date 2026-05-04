@@ -66,48 +66,49 @@ export default async function TutorSessionsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-bold font-heading text-secondary">Sessions</h1>
-        <p className="text-muted-foreground mt-1">
+        <h1 className="text-3xl font-bold font-heading text-primary">Sessions</h1>
+        <p className="text-muted-foreground mt-1 font-sans">
           View all sessions by status and complete upcoming sessions.
         </p>
       </div>
 
       {!result.success && (
-        <div className="bg-red-50 text-red-700 p-4 rounded-xl border border-red-200">
+        <div className="bg-destructive/10 text-destructive p-4 rounded-2xl border border-destructive/20 font-medium text-sm">
           {result.message || "Unable to load sessions right now."}
         </div>
       )}
 
       {bookings.length === 0 ? (
-        <div className="bg-white min-h-[45vh] rounded-2xl border border-border shadow-sm flex flex-col items-center justify-center p-8 text-center">
-          <div className="w-14 h-14 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
-            <CalendarDays className="w-7 h-7" />
+        <div className="bg-card min-h-[45vh] rounded-3xl border border-border shadow-sm flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
+          <div className="w-16 h-16 rounded-2xl bg-muted/50 text-muted-foreground flex items-center justify-center mb-6 relative z-10 border border-border">
+            <CalendarDays className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-semibold text-slate-900">No Sessions Found</h2>
-          <p className="text-muted-foreground mt-2 max-w-md">
+          <h2 className="text-2xl font-bold font-heading text-foreground relative z-10">No Sessions Found</h2>
+          <p className="text-muted-foreground mt-2 max-w-md relative z-10">
             Your tutor account currently has no booking sessions.
           </p>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-10">
           {sections.map((section) => (
-            <section key={section.id} className="space-y-4">
-              <div className="flex items-start justify-between gap-4">
+            <section key={section.id} className="space-y-5">
+              <div className="flex items-start justify-between gap-4 border-b border-border pb-4">
                 <div>
-                  <h2 className="text-xl font-semibold text-slate-900">{section.title}</h2>
+                  <h2 className="text-xl font-bold font-heading text-foreground">{section.title}</h2>
                   <p className="text-sm text-muted-foreground mt-1">{section.description}</p>
                 </div>
-                <span className="text-sm font-medium px-3 py-1 rounded-full bg-slate-100 text-slate-700">
+                <span className="text-sm font-bold px-3 py-1.5 rounded-xl bg-muted/50 text-foreground border border-border">
                   {section.items.length}
                 </span>
               </div>
 
               {section.items.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border bg-white p-6 text-sm text-muted-foreground">
+                <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-8 text-center text-sm font-medium text-muted-foreground">
                   {section.emptyText}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {section.items.map((booking) => (
                     <TutorSessionCard key={booking.id} booking={booking} section={section.id} />
                   ))}

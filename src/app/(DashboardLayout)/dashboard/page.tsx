@@ -26,10 +26,10 @@ const normalizeStatus = (status: unknown) => {
 };
 
 const getStatusClasses = (status: string) => {
-  if (status === "completed") return "bg-blue-100 text-blue-800";
-  if (status === "cancelled") return "bg-red-100 text-red-800";
-  if (status === "confirmed") return "bg-green-100 text-green-800";
-  return "bg-yellow-100 text-yellow-800";
+  if (status === "completed") return "bg-blue-100/50 dark:bg-blue-500/20 text-blue-800 dark:text-blue-400";
+  if (status === "cancelled") return "bg-red-100/50 dark:bg-red-500/20 text-red-800 dark:text-red-400";
+  if (status === "confirmed") return "bg-green-100/50 dark:bg-green-500/20 text-green-800 dark:text-green-400";
+  return "bg-yellow-100/50 dark:bg-yellow-500/20 text-yellow-800 dark:text-yellow-400";
 };
 
 const getActivityText = (status: string) => {
@@ -71,11 +71,11 @@ export default async function StudentDashboardPage() {
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold font-heading text-primary">Student Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Track your latest session progress and activity.</p>
+          <p className="text-muted-foreground mt-1 font-sans">Track your latest session progress and activity.</p>
         </div>
         <Link
           href="/dashboard/bookings"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-white hover:bg-slate-50 text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-card hover:bg-muted/50 text-foreground text-sm font-medium transition-colors shadow-sm"
         >
           View Bookings
           <ArrowRight className="w-4 h-4" />
@@ -83,48 +83,54 @@ export default async function StudentDashboardPage() {
       </div>
 
       {!result.success && (
-        <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-200">
+        <div className="bg-destructive/10 text-destructive p-4 rounded-2xl border border-destructive/20 font-medium text-sm">
           <p>{result.message || "Failed to load dashboard data. Please try again later."}</p>
         </div>
       )}
 
-      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        <div className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col gap-2">
-          <span className="text-muted-foreground font-medium">Upcoming Sessions</span>
-          <span className="text-4xl font-bold text-slate-900">{upcomingCount}</span>
+      <div className="grid auto-rows-min gap-6 md:grid-cols-3">
+        <div className="bg-card p-6 rounded-3xl border border-border shadow-sm hover:shadow-md dark:shadow-[0_4px_20px_rgb(0,0,0,0.1)] transition-shadow flex flex-col gap-2 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors pointer-events-none -translate-y-1/2 translate-x-1/2" />
+          <span className="text-muted-foreground font-medium text-sm relative z-10">Upcoming Sessions</span>
+          <span className="text-4xl font-bold text-foreground font-heading relative z-10">{upcomingCount}</span>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col gap-2">
-          <span className="text-muted-foreground font-medium">Completed Sessions</span>
-          <span className="text-4xl font-bold text-slate-900">{completedCount}</span>
+        <div className="bg-card p-6 rounded-3xl border border-border shadow-sm hover:shadow-md dark:shadow-[0_4px_20px_rgb(0,0,0,0.1)] transition-shadow flex flex-col gap-2 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl group-hover:bg-blue-500/10 transition-colors pointer-events-none -translate-y-1/2 translate-x-1/2" />
+          <span className="text-muted-foreground font-medium text-sm relative z-10">Completed Sessions</span>
+          <span className="text-4xl font-bold text-foreground font-heading relative z-10">{completedCount}</span>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col gap-2">
-          <span className="text-muted-foreground font-medium">Canceled Sessions</span>
-          <span className="text-4xl font-bold text-slate-900">{cancelledCount}</span>
+        <div className="bg-card p-6 rounded-3xl border border-border shadow-sm hover:shadow-md dark:shadow-[0_4px_20px_rgb(0,0,0,0.1)] transition-shadow flex flex-col gap-2 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-full blur-2xl group-hover:bg-red-500/10 transition-colors pointer-events-none -translate-y-1/2 translate-x-1/2" />
+          <span className="text-muted-foreground font-medium text-sm relative z-10">Canceled Sessions</span>
+          <span className="text-4xl font-bold text-foreground font-heading relative z-10">{cancelledCount}</span>
         </div>
       </div>
 
-      <div className="bg-white min-h-[50vh] p-6 flex-1 rounded-2xl border border-border shadow-sm flex flex-col">
-        <div className="flex items-center justify-between gap-3 mb-4">
-          <h2 className="text-xl font-bold font-heading">Recent Activity</h2>
-          <Link href="/dashboard/bookings" className="text-sm font-medium text-primary hover:underline">
+      <div className="bg-card min-h-[50vh] p-6 sm:p-8 flex-1 rounded-3xl border border-border shadow-sm dark:shadow-[0_4px_20px_rgb(0,0,0,0.1)] flex flex-col relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="flex items-center justify-between gap-3 mb-6 relative z-10 border-b border-border pb-4">
+          <h2 className="text-xl font-bold font-heading text-foreground">Recent Activity</h2>
+          <Link href="/dashboard/bookings" className="text-sm font-medium text-primary hover:text-primary-dark transition-colors hover:underline">
             See all
           </Link>
         </div>
 
         {recentActivities.length === 0 ? (
-          <div className="border border-dashed border-border rounded-xl p-8 text-center">
-            <p className="text-muted-foreground">
+          <div className="border border-dashed border-border bg-muted/20 rounded-3xl p-12 flex flex-col items-center justify-center text-center relative z-10">
+            <Calendar className="w-12 h-12 text-muted-foreground/50 mb-4" />
+            <p className="text-muted-foreground mb-4">
               You don&apos;t have any recent activity yet. Start by booking a new session.
             </p>
             <Link
               href="/tutors"
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
+              className="mt-2 inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white text-sm font-bold shadow-[0_4px_14px_0_rgb(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] transition-all"
             >
               Find a Tutor
             </Link>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4 relative z-10">
             {recentActivities.map((booking, index) => {
               const status = normalizeStatus(booking?.status) || "pending";
               const statusClasses = getStatusClasses(status);
@@ -136,26 +142,26 @@ export default async function StudentDashboardPage() {
               return (
                 <div
                   key={booking.id || index}
-                  className="border border-border rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+                  className="bg-muted/30 dark:bg-muted/10 border border-border/60 hover:border-border rounded-2xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-all hover:shadow-md dark:hover:shadow-primary/5 group"
                 >
                   <div className="flex flex-col gap-1.5">
                     <div className="flex items-center gap-2">
                       {status === "completed" ? (
-                        <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                        <CheckCircle2 className="w-5 h-5 text-blue-500" />
                       ) : status === "cancelled" ? (
-                        <XCircle className="w-4 h-4 text-red-600" />
+                        <XCircle className="w-5 h-5 text-red-500" />
                       ) : (
-                        <Calendar className="w-4 h-4 text-primary" />
+                        <Calendar className="w-5 h-5 text-primary" />
                       )}
-                      <p className="font-semibold text-slate-900">
-                        {getActivityText(status)} with {tutorName}
+                      <p className="font-bold text-foreground text-lg group-hover:text-primary transition-colors">
+                        {getActivityText(status)} <span className="font-medium text-muted-foreground">with</span> {tutorName}
                       </p>
                     </div>
 
-                    <p className="text-sm text-muted-foreground">{subject}</p>
+                    <p className="text-sm font-medium text-muted-foreground ml-7">{subject}</p>
 
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
-                      <span className="inline-flex items-center gap-1.5">
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground ml-7 mt-1">
+                      <span className="inline-flex items-center gap-1.5 bg-background border border-border px-2.5 py-1 rounded-lg shadow-sm">
                         <Calendar className="w-3.5 h-3.5 text-primary" />
                         {isValidDate
                           ? sessionDate!.toLocaleDateString("en-US", {
@@ -166,7 +172,7 @@ export default async function StudentDashboardPage() {
                             })
                           : "Date TBD"}
                       </span>
-                      <span className="inline-flex items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1.5 bg-background border border-border px-2.5 py-1 rounded-lg shadow-sm">
                         <Clock className="w-3.5 h-3.5 text-primary" />
                         {isValidDate
                           ? sessionDate!.toLocaleTimeString("en-US", {
@@ -178,8 +184,8 @@ export default async function StudentDashboardPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className={`${statusClasses} capitalize px-3 py-1 text-xs font-semibold rounded-full`}>
+                  <div className="flex items-center gap-3">
+                    <span className={`${statusClasses} capitalize px-3 py-1.5 text-xs font-bold rounded-xl border border-current/20`}>
                       {status === "cancelled" ? "Canceled" : status}
                     </span>
 
@@ -188,10 +194,10 @@ export default async function StudentDashboardPage() {
                         href={booking.meetingLink}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:underline"
+                        className="inline-flex items-center gap-1.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl shadow-md hover:shadow-lg transition-all"
                       >
                         <Video className="w-4 h-4" />
-                        Join
+                        Join Call
                       </a>
                     )}
                   </div>

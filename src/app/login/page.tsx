@@ -108,94 +108,99 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-[#F8FAFC]">
+    <div className="min-h-screen flex flex-col md:flex-row bg-background">
       {/* Left Side - Illustration/Brand */}
-      <div className="hidden md:flex md:w-1/2 bg-[#1E40AF] p-12 text-white flex-col justify-between relative overflow-hidden">
+      <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-primary to-blue-800 dark:from-slate-900 dark:to-slate-950 p-12 text-white flex-col justify-between relative overflow-hidden">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-96 h-96 bg-[#2563EB]/40 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[500px] h-[500px] bg-[#14B8A6]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-96 h-96 bg-white/10 dark:bg-primary/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[500px] h-[500px] bg-teal-400/20 dark:bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col justify-between h-full">
           <div>
-            <Link href="/" className="flex items-center space-x-2 w-fit mb-12">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-                <GraduationCap className="h-6 w-6 text-[#2563EB]" />
+            <Link href="/" className="flex items-center space-x-2 w-fit mb-12 group">
+              <div className="w-10 h-10 bg-white/20 dark:bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 group-hover:scale-105 transition-transform">
+                <GraduationCap className="h-6 w-6 text-white" />
               </div>
-              <span className="font-bold text-2xl font-['Poppins',_sans-serif]">
-                SkillBridge<span className="text-[#F59E0B]">.</span>
+              <span className="font-bold text-2xl font-heading tracking-tight">
+                SkillBridge<span className="text-accent">.</span>
               </span>
             </Link>
 
             <div className="space-y-6">
-              <h1 className="text-4xl lg:text-5xl font-bold font-['Poppins',_sans-serif] leading-tight">
+              <h1 className="text-4xl lg:text-5xl font-bold font-heading leading-tight drop-shadow-sm">
                 Welcome back to your learning journey
               </h1>
-              <p className="text-lg text-[#F8FAFC]/80 max-w-md font-['Inter',_sans-serif]">
+              <p className="text-lg text-white/80 max-w-md font-sans leading-relaxed">
                 Connect with expert tutors, master new skills, and accelerate your career growth today.
               </p>
             </div>
           </div>
 
-          <div className="relative z-10 flex items-center space-x-4 text-sm font-medium">
+          <div className="relative z-10 flex items-center space-x-4 text-sm font-medium bg-white/10 dark:bg-white/5 backdrop-blur-md w-fit px-4 py-3 rounded-2xl border border-white/10">
             <div className="flex -space-x-3">
               {[1, 2, 3, 4].map((i) => (
                 <img
                   key={i}
                   src={`https://i.pravatar.cc/100?img=${i + 10}`}
                   alt="Student"
-                  className="w-10 h-10 rounded-full border-2 border-[#1E40AF] object-cover"
+                  className="w-10 h-10 rounded-full border-2 border-primary dark:border-background object-cover"
                 />
               ))}
             </div>
-            <p>Join 10k+ learners already learning</p>
+            <p className="text-white/90">Join 10k+ learners already learning</p>
           </div>
         </div>
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 relative">
-        <div className="w-full max-w-md space-y-8 relative z-10 bg-white p-8 sm:p-10 rounded-2xl shadow-xl border border-[#E2E8F0] md:border-none md:shadow-none md:bg-transparent md:p-0">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 relative overflow-hidden">
+        {/* Subtle background glow for dark mode right side */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 dark:bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="w-full max-w-md space-y-8 relative z-10 bg-card md:bg-transparent p-8 sm:p-10 rounded-3xl shadow-xl md:shadow-none border border-border md:border-none">
 
           <div className="md:hidden mb-8 flex justify-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <GraduationCap className="h-8 w-8 text-[#2563EB]" />
-              <span className="font-bold text-2xl text-[#1E40AF] font-['Poppins',_sans-serif]">
-                SkillBridge
+            <Link href="/" className="flex items-center space-x-2 group">
+              <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                <GraduationCap className="h-6 w-6 text-primary" />
+              </div>
+              <span className="font-bold text-2xl text-foreground font-heading tracking-tight">
+                SkillBridge<span className="text-primary">.</span>
               </span>
             </Link>
           </div>
 
-          <div className="text-center md:text-left space-y-2">
-            <h2 className="text-3xl font-bold text-[#0F172A] font-['Poppins',_sans-serif]">
+          <div className="text-center md:text-left space-y-3">
+            <h2 className="text-3xl font-bold text-foreground font-heading tracking-tight">
               Sign in
             </h2>
-            <p className="text-[#475569] font-['Inter',_sans-serif]">
+            <p className="text-muted-foreground font-sans text-sm md:text-base">
               Enter your email and password to access your account.
             </p>
           </div>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-[#0F172A] font-medium">Email</FormLabel>
+                      <FormLabel className="text-foreground font-medium ml-1">Email</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Mail className="h-5 w-5 text-[#475569]/50" />
+                        <div className="relative group">
+                          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <Mail className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                           </div>
                           <Input
                             placeholder="name@example.com"
-                            className="pl-10 h-12 bg-[#F8FAFC] border-[#E2E8F0] focus-visible:ring-[#2563EB] rounded-xl text-base"
+                            className="pl-11 h-14 bg-muted/50 border-border focus-visible:ring-primary focus-visible:border-primary rounded-2xl text-base transition-all"
                             {...field}
                           />
                         </div>
                       </FormControl>
-                      <FormMessage className="text-[#EF4444]" />
+                      <FormMessage className="text-destructive ml-1" />
                     </FormItem>
                   )}
                 />
@@ -204,61 +209,63 @@ export default function LoginPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="flex items-center justify-between">
-                        <FormLabel className="text-[#0F172A] font-medium">Password</FormLabel>
-                        <Link href="/forgot-password" className="text-sm font-medium text-[#2563EB] hover:underline">
+                      <div className="flex items-center justify-between ml-1 mb-1">
+                        <FormLabel className="text-foreground font-medium mb-0">Password</FormLabel>
+                        <Link href="/forgot-password" className="text-sm font-medium text-primary hover:text-primary-dark transition-colors hover:underline">
                           Forgot password?
                         </Link>
                       </div>
                       <FormControl>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Lock className="h-5 w-5 text-[#475569]/50" />
+                        <div className="relative group">
+                          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <Lock className="h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                           </div>
                           <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="••••••••"
-                            className="pl-10 pr-12 h-12 bg-[#F8FAFC] border-[#E2E8F0] focus-visible:ring-[#2563EB] rounded-xl text-base"
+                            className="pl-11 pr-12 h-14 bg-muted/50 border-border focus-visible:ring-primary focus-visible:border-primary rounded-2xl text-base transition-all"
                             {...field}
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#475569] hover:text-[#0F172A] transition-colors"
+                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-muted-foreground hover:text-foreground transition-colors"
                           >
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                           </button>
                         </div>
                       </FormControl>
-                      <FormMessage className="text-[#EF4444]" />
+                      <FormMessage className="text-destructive ml-1" />
                     </FormItem>
                   )}
                 />
               </div>
 
-              <Button
-                type="submit"
-                className="w-full h-12 bg-[#2563EB] hover:bg-[#1E40AF] text-white rounded-xl font-bold text-base shadow-md transition-all flex items-center justify-center group"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Signing in...
-                  </>
-                ) : (
-                  <>
-                    Sign in
-                    <ArrowRight className="ml-2 h-5 w-5 opacity-70 group-hover:translate-x-1 transition-transform" />
-                  </>
-                )}
-              </Button>
+              <div className="pt-2">
+                <Button
+                  type="submit"
+                  className="w-full h-14 bg-gradient-to-r from-primary to-blue-500 hover:from-primary-dark hover:to-primary text-white rounded-2xl font-bold text-base shadow-[0_4px_14px_0_rgb(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] transition-all flex items-center justify-center group"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    <>
+                      Sign in
+                      <ArrowRight className="ml-2 h-5 w-5 opacity-70 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </Button>
+              </div>
             </form>
           </Form>
 
-          <div className="mt-8 text-center text-sm text-[#475569] font-['Inter',_sans-serif]">
+          <div className="mt-8 text-center text-sm text-muted-foreground font-sans">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="font-bold text-[#2563EB] hover:underline">
+            <Link href="/register" className="font-bold text-primary hover:text-primary-dark transition-colors hover:underline">
               Create an account
             </Link>
           </div>

@@ -234,7 +234,7 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
             <Button
                 onClick={handleOpen}
                 size="lg"
-                className="w-full bg-primary hover:bg-primary-dark text-white rounded-xl shadow-md py-6 text-lg font-bold transition-all"
+                className="w-full bg-gradient-to-r from-primary to-blue-500 hover:from-primary-dark hover:to-primary text-white rounded-2xl shadow-[0_4px_14px_0_rgb(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] py-6 text-lg font-bold transition-all"
             >
                 Book Session
             </Button>
@@ -253,7 +253,7 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
                             initial={{ scale: 0.95, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                            className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden z-10 border border-border flex flex-col max-h-[90vh]"
+                            className="relative bg-card rounded-3xl shadow-2xl dark:shadow-[0_8px_40px_rgb(0,0,0,0.3)] w-full max-w-lg overflow-hidden z-10 border border-border flex flex-col max-h-[90vh]"
                         >
                             {/* Header */}
                             <div className="bg-gradient-to-r from-primary/10 to-secondary/10 px-6 py-6 border-b border-border flex justify-between items-center shrink-0">
@@ -263,7 +263,7 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
                                 </div>
                                 <button
                                     onClick={handleClose}
-                                    className="p-2 bg-white/50 hover:bg-white rounded-full transition-colors"
+                                    className="p-2 bg-background/50 hover:bg-background rounded-full transition-colors text-foreground"
                                     type="button"
                                 >
                                     <X className="w-5 h-5 text-muted-foreground" />
@@ -274,9 +274,9 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
                             <div className="overflow-y-auto w-full no-scrollbar">
                                 {clientSecret && bookingId ? (
                                     <div className="p-6 space-y-6">
-                                        <div className="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-border shrink-0">
+                                        <div className="bg-muted/30 p-4 rounded-2xl flex justify-between items-center border border-border shrink-0">
                                             <div>
-                                                <span className="font-medium text-muted-foreground">Secure payment</span>
+                                                <span className="font-medium text-foreground">Secure payment</span>
                                                 <p className="text-xs text-muted-foreground mt-1">Booking confirms after payment succeeds.</p>
                                             </div>
                                             <span className="font-bold text-lg text-primary">${pricePerHr}</span>
@@ -314,8 +314,8 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
                                     </div>
                                 ) : (
                                     <form onSubmit={handleBook} className="p-6 space-y-6">
-                                        <div className="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-border shrink-0">
-                                            <span className="font-medium text-muted-foreground">Rate</span>
+                                        <div className="bg-muted/30 p-4 rounded-2xl flex justify-between items-center border border-border shrink-0">
+                                            <span className="font-medium text-foreground">Rate</span>
                                             <span className="font-bold text-lg text-primary">${pricePerHr}/hr</span>
                                         </div>
 
@@ -347,7 +347,7 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
                                                                         "p-3 rounded-xl border text-sm flex flex-col items-center justify-center transition-all",
                                                                         selectedDate && isSameDay(selectedDate, d)
                                                                             ? "bg-primary border-primary text-white shadow-md"
-                                                                            : "bg-white border-border text-foreground hover:border-primary/50 hover:bg-primary/5"
+                                                                            : "bg-card border-border text-foreground hover:border-primary/50 hover:bg-primary/5 dark:hover:bg-primary/20"
                                                                     )}
                                                                 >
                                                                     <span className="font-bold">{format(d, 'MMM d')}</span>
@@ -361,7 +361,7 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
                                                             ))}
                                                         </div>
                                                     ) : (
-                                                        <div className="text-center p-4 bg-slate-50 rounded-xl border border-border text-muted-foreground text-sm">
+                                                        <div className="text-center p-4 bg-muted/30 rounded-xl border border-border text-muted-foreground text-sm">
                                                             No available dates found in the next two weeks.
                                                         </div>
                                                     )}
@@ -391,7 +391,7 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
                                                                                 "py-3 px-2 rounded-xl border text-sm font-medium transition-all text-center",
                                                                                 selectedTimeSlot === slot
                                                                                     ? "bg-secondary border-secondary text-white shadow-md"
-                                                                                    : "bg-white border-border text-foreground hover:border-secondary/50 hover:bg-secondary/5"
+                                                                                    : "bg-card border-border text-foreground hover:border-secondary/50 hover:bg-secondary/5 dark:hover:bg-secondary/20"
                                                                             )}
                                                                         >
                                                                             {(() => {
@@ -417,7 +417,7 @@ export function BookingModal({ tutorId, tutorName, pricePerHr, availability }: B
                                             <Button
                                                 type="submit"
                                                 disabled={isLoading || !selectedDate || !selectedTimeSlot}
-                                                className="w-full py-6 text-lg rounded-xl bg-primary hover:bg-primary-dark text-white shadow-xl transition-all flex justify-center items-center"
+                                                className="w-full py-6 text-lg rounded-2xl bg-gradient-to-r from-primary to-blue-500 hover:from-primary-dark hover:to-primary text-white shadow-[0_4px_14px_0_rgb(37,99,235,0.39)] transition-all flex justify-center items-center"
                                             >
                                                 {isLoading ? (
                                                     <>

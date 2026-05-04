@@ -3,7 +3,7 @@ import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "luc
 
 export function Footer() {
     return (
-        <footer className="bg-[#0F172A] text-white pt-16 pb-8">
+        <footer className="bg-slate-900 dark:bg-background text-white pt-16 pb-8 border-t border-transparent dark:border-border">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
 
@@ -16,16 +16,16 @@ export function Footer() {
                             Empowering learners worldwide by connecting them with expert tutors. Master the skills of tomorrow, today.
                         </p>
                         <div className="flex space-x-4 pt-2">
-                            <Link href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-colors">
+                            <Link href="#" className="w-10 h-10 rounded-full bg-slate-800 dark:bg-muted flex items-center justify-center text-slate-400 dark:text-muted-foreground hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors">
                                 <Facebook size={20} />
                             </Link>
-                            <Link href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-info hover:text-white transition-colors">
+                            <Link href="#" className="w-10 h-10 rounded-full bg-slate-800 dark:bg-muted flex items-center justify-center text-slate-400 dark:text-muted-foreground hover:bg-info hover:text-white dark:hover:bg-info transition-colors">
                                 <Twitter size={20} />
                             </Link>
-                            <Link href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-secondary hover:text-white transition-colors">
+                            <Link href="#" className="w-10 h-10 rounded-full bg-slate-800 dark:bg-muted flex items-center justify-center text-slate-400 dark:text-muted-foreground hover:bg-secondary hover:text-white dark:hover:bg-secondary transition-colors">
                                 <Instagram size={20} />
                             </Link>
-                            <Link href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary-dark hover:text-white transition-colors">
+                            <Link href="#" className="w-10 h-10 rounded-full bg-slate-800 dark:bg-muted flex items-center justify-center text-slate-400 dark:text-muted-foreground hover:bg-primary-dark hover:text-white dark:hover:bg-primary-dark transition-colors">
                                 <Linkedin size={20} />
                             </Link>
                         </div>
