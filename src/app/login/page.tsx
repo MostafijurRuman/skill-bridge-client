@@ -6,8 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, Mail, Lock, ArrowRight, GraduationCap, Eye, EyeOff } from "lucide-react";
+import { Loader2, Mail, Lock, ArrowRight, GraduationCap, Eye, EyeOff, ShieldCheck, User, UserCheck } from "lucide-react";
 import { setCookie } from "cookies-next";
+import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -42,7 +43,14 @@ const isSafeRedirectPath = (path: string | null): path is string =>
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [demoRole, setDemoRole] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  const demoCredentials = {
+    student: { email: "ph@gmail.com", password: "User#xyz123" },
+    tutor: { email: "elon@x.com", password: "12345678" },
+    admin: { email: "admin@skillbridge.com", password: "admin1234" },
+  };
 
   // 2. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,6 +71,11 @@ export default function LoginPage() {
         // Assuming your backend returns token and user object as described
         setCookie("token", response.token, { maxAge: 60 * 60 * 24 * 7 }); // 7 days
         setCookie("user", JSON.stringify(response.user), { maxAge: 60 * 60 * 24 * 7 });
+        
+        // Store role in localStorage as requested
+        if (typeof window !== "undefined") {
+          localStorage.setItem("user_role", response.user.role.toLowerCase());
+        }
 
         // Show success alert
         Swal.fire({
@@ -104,8 +117,19 @@ export default function LoginPage() {
       });
     } finally {
       setIsLoading(false);
+      setDemoRole(null);
     }
   }
+
+  const handleDemoLogin = async (role: "student" | "tutor" | "admin") => {
+    setDemoRole(role);
+    const credentials = demoCredentials[role];
+    form.setValue("email", credentials.email);
+    form.setValue("password", credentials.password);
+    
+    // Submit the form
+    await form.handleSubmit(onSubmit)();
+  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-background">
@@ -269,6 +293,80 @@ export default function LoginPage() {
               Create an account
             </Link>
           </div>
+
+          {/* Demo Login Section */}
+          <div className="space-y-5 pt-6 border-t border-border mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-bold">
+                <span className="bg-background md:bg-card px-3 text-muted-foreground/70">
+                  Demo Login – Testing Purposes
+                </span>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleDemoLogin("student")}
+                disabled={isLoading}
+                className={cn(
+                  "h-11 rounded-xl border-border/50 hover:border-primary/50 hover:bg-primary/5 hover:text-primary transition-all group",
+                  demoRole === "student" && "border-primary bg-primary/5 text-primary"
+                )}
+              >
+                {demoRole === "student" ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                ) : (
+                  <User className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                )}
+                <span className="text-xs font-semibold">Student</span>
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleDemoLogin("tutor")}
+                disabled={isLoading}
+                className={cn(
+                  "h-11 rounded-xl border-border/50 hover:border-primary/50 hover:bg-primary/5 hover:text-primary transition-all group",
+                  demoRole === "tutor" && "border-primary bg-primary/5 text-primary"
+                )}
+              >
+                {demoRole === "tutor" ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                ) : (
+                  <UserCheck className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                )}
+                <span className="text-xs font-semibold">Tutor</span>
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleDemoLogin("admin")}
+                disabled={isLoading}
+                className={cn(
+                  "h-11 rounded-xl border-border/50 hover:border-primary/50 hover:bg-primary/5 hover:text-primary transition-all group",
+                  demoRole === "admin" && "border-primary bg-primary/5 text-primary"
+                )}
+              >
+                {demoRole === "admin" ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                ) : (
+                  <ShieldCheck className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                )}
+                <span className="text-xs font-semibold">Admin</span>
+              </Button>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
