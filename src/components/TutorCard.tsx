@@ -23,7 +23,7 @@ export default function TutorCard({ tutor }: TutorCardProps) {
     };
 
     return (
-        <motion.div variants={fadeIn} className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-xl dark:shadow-[0_4px_20px_rgb(0,0,0,0.2)] dark:hover:shadow-primary/10 dark:hover:border-primary/50 transition-all duration-300 group flex flex-col h-full relative">
+        <motion.div variants={fadeIn} className="bg-card rounded-[2rem] border border-border overflow-hidden shadow-sm hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.2)] dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] dark:hover:border-primary/30 transition-all duration-[300ms] ease-out group flex flex-col h-full relative hover:-translate-y-[4px]">
             <div className="h-24 bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 relative">
                 <img
                     src={getAvatarUrl()}
@@ -50,7 +50,7 @@ export default function TutorCard({ tutor }: TutorCardProps) {
                     <span className="font-bold text-foreground">{Number(tutor.rating || 0).toFixed(1)}</span>
                 </div>
                 <Link href={`/tutors/${tutor.id}`} className="w-full mt-auto">
-                    <Button className="w-full bg-background dark:bg-muted text-foreground border border-border hover:bg-primary hover:text-white dark:hover:bg-primary transition-all rounded-xl">
+                    <Button className="w-full bg-background dark:bg-muted text-foreground border border-border hover:bg-primary hover:text-white dark:hover:bg-primary transition-colors duration-300 rounded-xl">
                         View Profile
                     </Button>
                 </Link>
