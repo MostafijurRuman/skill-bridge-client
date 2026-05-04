@@ -1,11 +1,22 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Sparkles, Bot } from "lucide-react";
+import Link from "next/link";
+import { MessageCircle, X, Send, Sparkles, Bot, Star, ExternalLink } from "lucide-react";
+
+interface TutorData {
+  _id: string;
+  name: string;
+  subject: string;
+  price: number;
+  rating: number;
+  profileUrl: string;
+}
 
 interface Message {
   role: "user" | "model";
   text: string;
+  tutors?: TutorData[];
 }
 
 const QUICK_ACTIONS = [
@@ -68,7 +79,7 @@ export function ChatBot() {
         throw new Error(data.error || "Something went wrong.");
       }
 
-      setMessages((prev) => [...prev, { role: "model", text: data.reply }]);
+      setMessages((prev) => [...prev, { role: "model", text: data.reply, tutors: data.tutors }]);
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
@@ -126,14 +137,46 @@ export function ChatBot() {
               key={index}
               className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              <div
-                className={`max-w-[85%] rounded-2xl p-3 text-sm shadow-sm ${msg.role === "user" ? "bg-blue-600 text-white rounded-tr-sm" : "bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700 rounded-tl-sm"}`}
-              >
-                {/* Parse Markdown-like simple bold text for model responses */}
-                {msg.role === "model" ? (
-                   <div dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }} />
-                ) : (
-                  msg.text
+              <div className="flex flex-col gap-2 max-w-[85%]">
+                <div
+                  className={`rounded-2xl p-3 text-sm shadow-sm ${msg.role === "user" ? "bg-blue-600 text-white rounded-tr-sm self-end" : "bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-100 dark:border-zinc-700 rounded-tl-sm self-start"}`}
+                >
+                  {/* Parse Markdown-like simple bold text for model responses */}
+                  {msg.role === "model" ? (
+                     <div dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }} />
+                  ) : (
+                    msg.text
+                  )}
+                </div>
+                
+                {/* Tutor Cards Rendering */}
+                {msg.role === "model" && msg.tutors && msg.tutors.length > 0 && (
+                  <div className="flex flex-col gap-2 mt-1 w-full max-w-sm self-start">
+                    {msg.tutors.map((tutor) => (
+                      <div key={tutor._id} className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl p-3 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-semibold text-zinc-900 dark:text-white text-sm">{tutor.name}</h4>
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400">{tutor.subject}</p>
+                          </div>
+                          <div className="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-500 px-1.5 py-0.5 rounded-md text-xs font-medium">
+                            <Star className="w-3 h-3 fill-current" />
+                            <span>{tutor.rating.toFixed(1)}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between mt-1">
+                          <span className="font-medium text-blue-600 dark:text-blue-400 text-sm">${tutor.price}/hr</span>
+                          <Link 
+                            href={tutor.profileUrl} 
+                            className="flex items-center gap-1 text-xs bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-700 dark:text-zinc-200 px-3 py-1.5 rounded-lg transition-colors font-medium"
+                          >
+                            View Profile
+                            <ExternalLink className="w-3 h-3" />
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
@@ -141,9 +184,13 @@ export function ChatBot() {
           
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-white dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl rounded-tl-sm p-4 flex items-center gap-2 shadow-sm">
-                <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
-                <span className="text-sm text-zinc-500">SkillBridge AI is thinking...</span>
+              <div className="bg-white dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-3 shadow-sm">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
+                </div>
+                <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">SkillBridge AI is analyzing your request...</span>
               </div>
             </div>
           )}
