@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { ChatBot } from "@/components/ChatBot";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,6 +43,7 @@ export default function RootLayout({
           disableTransitionOnChange={false}
         >
           {children}
+          <ChatBot />
         </ThemeProvider>
       </body>
     </html>
