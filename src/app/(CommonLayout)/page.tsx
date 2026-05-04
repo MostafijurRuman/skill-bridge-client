@@ -38,6 +38,7 @@ import { getAllTutors } from "@/services/tutors";
 import { getAllCategories, Category } from "@/services/categories";
 import TutorCard from "@/components/TutorCard";
 import { TutorType } from "@/types/tutor";
+import { TutorCardSkeleton, GridSkeleton } from "@/components/skeletons";
 
 const fallbackTutors: TutorType[] = [
   {
@@ -273,8 +274,10 @@ export default function Home() {
           </div>
 
           {loading ? (
-            <div className="col-span-1 sm:col-span-2 lg:col-span-4 text-center py-12 text-muted-foreground">
-              Loading top tutors...
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <TutorCardSkeleton key={i} />
+              ))}
             </div>
           ) : (
             <motion.div
